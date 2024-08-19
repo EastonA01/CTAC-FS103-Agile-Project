@@ -75,7 +75,7 @@ CTAC-FS103-Agile-Project/
    ```bash
    git clone https://github.com/yourusername/restaurant-management-system.git
    cd restaurant-management-system
-  ```
+    ```
 2. **Build the project using Maven:**
   ```bash
   mvn clean install
@@ -84,7 +84,7 @@ CTAC-FS103-Agile-Project/
   ```bash
   mvn exec:java -Dexec.mainClass="com.restaurantmanagement.Main"
   ```
-**Usage**
+## Usage
 ### Login:
 
 Start the application and log in with a user account.
@@ -108,15 +108,15 @@ Receive alerts when inventory is low.
 ### Sales Reporting:
 
 Generate and export daily sales reports for management review.
-Contributing
+## Contributing
 Contributions are welcome! If you find any bugs or want to add new features, feel free to open an issue or submit a pull request.
 
-Fork the project.
+### Fork the project.
 Create a new branch (git checkout -b feature/YourFeature).
 Commit your changes (git commit -am 'Add YourFeature').
 Push to the branch (git push origin feature/YourFeature).
 Open a pull request.
-License
+## License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ### Initial Contributors:

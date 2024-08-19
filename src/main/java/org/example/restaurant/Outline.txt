@@ -1,0 +1,56 @@
+Current state of things giving a breakdown of what each package does:
+
+1. GUI Components (Swing)
+- LoginFrame.java: For the login interface.
+- MainFrame.java: Main application window, with menus to navigate between different functionalities.
+- MenuManagementPanel.java: Interface to manage menu items.
+- OrderProcessingPanel.java: Interface for processing orders.
+- TableManagementPanel.java: Interface for managing tables.
+- InventoryManagementPanel.java: Interface for managing inventory.
+- SalesReportPanel.java: Interface for viewing and exporting sales reports.
+
+
+2. Model Classes
+- User.java: Represents users with attributes like username, passwordHash, role.
+- MenuItem.java: Represents a menu item with properties like name, description, price, etc.
+- Order.java: Represents an order with attributes like order ID, list of items, total price, status.
+- Table.java: Represents a table with properties like table ID, size, status.
+- InventoryItem.java: Represents an inventory item with properties like ingredient name, quantity, etc.
+
+
+- 3. Service Classes
+- UserService.java: Handles user login, authentication, and role management.
+- MenuService.java: Manages the menu, including adding, removing, and updating items.
+- OrderService.java: Handles order processing, updating order statuses, and calculating total prices.
+- TableService.java: Manages table assignments and statuses.
+- InventoryService.java: Tracks ingredient usage, updates quantities, and alerts when running low.
+- SalesReportService.java: Generates and exports sales reports.
+
+
+4. Controller Classes
+- LoginController.java: Handles login logic.
+- MenuController.java: Connects the GUI with the MenuService.
+- OrderController.java: Connects the GUI with the OrderService.
+- TableController.java: Connects the GUI with the TableService.
+- InventoryController.java: Connects the GUI with the InventoryService.
+- SalesReportController.java: Connects the GUI with the SalesReportService.
+
+
+5. Utilities
+- FileUtil.java: Utility class for file handling (loading and saving data).
+- HashUtil.java: Utility class for password hashing and verification.
+
+
+6. Testing
+- Write unit tests for the service layer using JUnit and Mockito.
+- Write integration tests for file handling, data persistence, and overall system workflows.
+
+
+7. Execution
+- Implement the Main class to start the application by showing the LoginFrame.
+- Ensure data persistence by loading data from files at startup and saving data on exit.
+
+
+8. File I/O
+- Save user data, menu items, orders, and inventory data in separate files (e.g., users.dat, menu.dat, etc.).
+- Ensure that changes to these files are atomic to avoid data corruption.

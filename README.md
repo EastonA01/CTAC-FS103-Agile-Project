@@ -41,7 +41,7 @@ The Restaurant Management System is a Java-based application designed to help re
 - **Password Hashing:** BCrypt
 
 ## Project Structure
-
+```bash
 CTAC-FS103-Agile-Project/
 ├── src/
 │ ├── main/
@@ -59,7 +59,7 @@ CTAC-FS103-Agile-Project/
 │ └── resources/
 ├── pom.xml
 └── README.md
-
+```
 ## Getting Started
 
 ### Prerequisites
@@ -75,15 +75,15 @@ CTAC-FS103-Agile-Project/
    ```bash
    git clone https://github.com/yourusername/restaurant-management-system.git
    cd restaurant-management-system
-```
+  ```
 2. **Build the project using Maven:**
   ```bash
-mvn clean install
-```
+  mvn clean install
+  ```
 3. **Run the application:**
-```bash
-mvn exec:java -Dexec.mainClass="com.restaurantmanagement.Main"
-```
+  ```bash
+  mvn exec:java -Dexec.mainClass="com.restaurantmanagement.Main"
+  ```
 **Usage**
 ### Login:
 

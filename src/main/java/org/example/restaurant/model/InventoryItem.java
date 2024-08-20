@@ -13,6 +13,19 @@ public class InventoryItem {
         this.quantity = quantity;
     }
 
-    // Getters and setters
-    // TODO: Implement getters and setters for each field
+    public String getIngredientName() {
+        return ingredientName;
+    }
+
+    public void setIngredientName(String ingredientName) {
+        this.ingredientName = ingredientName;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity (int quantity) {
+        this.quantity = quantity;
+    }
 }

@@ -19,6 +19,35 @@ public class MenuItem {
         this.ingredients = ingredients;
     }
 
-    // Getters and setters
-    // TODO: Implement getters and setters for each field
+    public String getName () {
+        return name;
+    }
+
+    public void setName (String name) {
+        this.name = name;
+    }
+
+    public String getDescription () {
+        return description;
+    }
+
+    public void setDescription (String description) {
+        this.description = description;
+    }
+
+    public double getPrice () {
+        return price;
+    }
+
+    public void setPrice (double price) {
+        this.price = price;
+    }
+
+    public List<String> getIngredients () {
+        return ingredients;
+    }
+
+    public void setIngredients (List<String> ingredients) {
+        this.ingredients = ingredients;
+    }
 }

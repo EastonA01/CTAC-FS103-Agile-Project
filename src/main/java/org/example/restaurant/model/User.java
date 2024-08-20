@@ -15,6 +15,27 @@ public class User {
         this.role = role;
     }
 
-    // Getters and setters
-    // TODO: Implement getters and setters for each field
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getpasswordHash() {
+        return passwordHash;
+    }
+
+    public void setpasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 }

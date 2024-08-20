@@ -19,6 +19,34 @@ public class Order {
         this.status = status;
     }
 
-    // Getters and setters
-    // TODO: Implement getters and setters for each field
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public List<MenuItem> getItems() {
+        return items;
+    }
+    public void setItems(List<MenuItem> items) {
+        this.items = items;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

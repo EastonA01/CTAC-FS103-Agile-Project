@@ -4,6 +4,7 @@ package org.example.restaurant.controller;
 Handles login logic.
  */
 
+import org.example.restaurant.gui.MainFrame;
 import org.example.restaurant.service.UserService;
 import org.example.restaurant.gui.LoginFrame;
 import org.example.restaurant.util.HashUtil;
@@ -29,7 +30,7 @@ public class LoginController {
                 String password = new String(loginFrame.passwordField.getPassword());
                 if(userService.login(username, password)) {
                     loginFrame.dispose();
-                    JOptionPane.showMessageDialog(null, "Login Successful. \n Hello " + username + " !");
+                    new MainFrame(username);
                 }
                 else{
                     JOptionPane.showMessageDialog(null, "Incorrect Username/Password", "alert", JOptionPane.ERROR_MESSAGE);

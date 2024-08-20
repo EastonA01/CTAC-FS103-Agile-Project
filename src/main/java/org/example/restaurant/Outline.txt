@@ -82,8 +82,8 @@ Implement OrderService.java, TableService.java, InventoryService.java, and Sales
 
 4. Implement the controller Package
 Start with LoginController.java:
-Link the UserService with the LoginFrame.
-Implement the logic for login validation and role management.
+Link the UserService with the LoginFrame. ✔
+Implement the logic for login validation and role management. ✔
 Continue with controllers for menu, order, table, inventory, and sales report management:
 Implement the business logic that connects the GUI with the underlying services.
 

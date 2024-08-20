@@ -73,8 +73,8 @@ Ensure that each model class accurately represents the data it needs to store.  
 
 3. Implement the service Package
 Start with UserService.java:
-Implement user login, registration, and role-based access control.
-Add methods to load and save users to a file.
+Implement user login, registration, and role-based access control.  ✔
+Add methods to load and save users to a file.                       ✔
 Move on to MenuService.java:
 Implement methods to add, remove, and edit menu items.
 Implement file I/O for menu persistence.

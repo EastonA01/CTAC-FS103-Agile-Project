@@ -10,7 +10,7 @@ public class HashUtil {
 
     public static String hashPassword(String password) {
         // Implement method to hash password using BCrypt
-        return BCrypt.hashpw(password, BCrypt.gensalt());
+        return BCrypt.hashpw(password, BCrypt.gensalt(12));
     }
 
     public static boolean checkPassword(String password, String hashed) {

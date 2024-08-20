@@ -7,6 +7,7 @@ Handles user login, authentication, and role management.
 import org.example.restaurant.model.User;
 import org.example.restaurant.util.FileUtil;
 import org.example.restaurant.util.HashUtil;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +44,7 @@ public class UserService {
         try {
             List<String[]> userData = FileUtil.readFromCSV(USER_CSV_FILE);
             for (String[] userRecord : userData) {
-                if (userRecord.length == 4) {  // Ensure the correct number of columns
+                if (userRecord.length == 3) {  // Ensure the correct number of columns
                     String username = userRecord[0];
                     String password = userRecord[1];
                     String role = userRecord[2];
@@ -63,7 +64,7 @@ public class UserService {
         defaultData.add(new String[]{"Username", "Password", "Role"});
 
         // Add a default user (optional)
-        defaultData.add(new String[]{"admin", "admin123", "manager"});
+        defaultData.add(new String[]{"admin", HashUtil.hashPassword("admin123"), "manager"});
 
         // Write the default data to the CSV file
         FileUtil.writeToCSV(USER_CSV_FILE, defaultData);
@@ -95,7 +96,7 @@ public class UserService {
         // Find user if in database and attempt login
         if(user != null){
             // Check userDB password hash against given password
-            return user.getpasswordHash().equals(HashUtil.hashPassword(password));
+            return HashUtil.checkPassword(password, user.getpasswordHash());
         }
         return false;
     }

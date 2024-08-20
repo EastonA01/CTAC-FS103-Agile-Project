@@ -64,12 +64,12 @@ Current Roadmap:
 Implement password hashing using BCrypt.    ✔
 Implement password validation.              ✔
 - FileUtil.java:
-Implement methods to save and load data to/from files.
-Start with simple text files and expand to more structured formats if needed.
+Implement methods to save and load data to/from files. ✔
+Start with simple text files and expand to more structured formats if needed. ✔
 
 2. Implement the model Package
-Implement getters and setters for each model class (User.java, MenuItem.java, etc.).
-Ensure that each model class accurately represents the data it needs to store.
+Implement getters and setters for each model class (User.java, MenuItem.java, etc.). ✔
+Ensure that each model class accurately represents the data it needs to store.      ✔
 
 3. Implement the service Package
 Start with UserService.java:

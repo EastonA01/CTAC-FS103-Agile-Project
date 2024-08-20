@@ -5,38 +5,40 @@ Utility class for file handling (loading and saving data).
  */
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileUtil {
 
-    public static void saveToFile(String filePath, String content) throws IOException {
-        // TODO: Implement method to save content to file
-        try{
-            File file = new File(filePath);
-            if(!file.exists()){
-                file.createNewFile();
+    /**
+    Writes data content to a CSV file
+     @param filePath The path of the file location
+     @param data A List of Strings, written line-by-line in the buffered writer
+     */
+    public static void writeToCSV(String filePath, List<String[]> data) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            for (String[] line : data) {
+                writer.write(String.join(",", line));
+                writer.newLine();
             }
-            FileWriter fw = new FileWriter(file);
-            fw.write(content);
-            fw.close();
-        }catch (IOException e){
-            e.printStackTrace();
         }
     }
 
-    public static String loadFromFile(String filePath) throws IOException {
-        // TODO: Implement method to load content from file
-        //return null;
-        try{
-            File file = new File(filePath);
-            if(!file.exists()){
-                file.createNewFile();
+    /**
+     Reads data content to a CSV file
+     @param filePath The path of the file location
+     @return List of Iterated Strings, split using a comma
+     */
+    public static List<String[]> readFromCSV(String filePath) throws IOException {
+        List<String[]> data = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] lineData = line.split(",");
+                data.add(lineData);
             }
-            FileReader fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
-            return br.readLine();
-        }catch (IOException e){
-            e.printStackTrace();
         }
-        return null;
+        return data;
     }
+
 }

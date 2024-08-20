@@ -5,71 +5,88 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("File Utility Tests")
-class FileUtilTest {
+class FileUtilTests {
 
-    private static final String TEST_FILE_PATH = "testfile.txt";
-    private static final String TEST_CONTENT = "This is a test content.";
+    private static final String TEST_CSV_FILE_PATH = "testdata.csv";
 
     @BeforeEach
     void setUp() throws IOException {
-        // Create a test file with initial content
-        Files.write(Paths.get(TEST_FILE_PATH), TEST_CONTENT.getBytes());
+        // Prepare test data to write to the CSV file
+        List<String[]> testData = new ArrayList<>();
+        testData.add(new String[]{"Name", "Age", "Occupation"});
+        testData.add(new String[]{"Alice", "30", "Engineer"});
+        testData.add(new String[]{"Bob", "25", "Doctor"});
+
+        // Write test data to the CSV file
+        FileUtil.writeToCSV(TEST_CSV_FILE_PATH, testData);
     }
 
     @AfterEach
-    void tearDown() throws IOException {
-        // Delete the test file after each test
-        Files.deleteIfExists(Paths.get(TEST_FILE_PATH));
+    void tearDown() {
+        // Delete the test CSV file after each test
+        File file = new File(TEST_CSV_FILE_PATH);
+        if (file.exists()) {
+            file.delete();
+        }
     }
 
     @Test
-    void saveToFile() throws IOException {
-        // New content to write
-        String newContent = "New content to write to the file.";
+    void testWriteToCSV() throws IOException {
+        // Prepare new data to write to the CSV file
+        List<String[]> newData = new ArrayList<>();
+        newData.add(new String[]{"Name", "Age", "Occupation"});
+        newData.add(new String[]{"Charlie", "28", "Teacher"});
 
-        // Use FileUtil to write content to the file
-        FileUtil.saveToFile(TEST_FILE_PATH, newContent);
+        // Write new data to the CSV file
+        FileUtil.writeToCSV(TEST_CSV_FILE_PATH, newData);
 
-        // Read the file content to verify it matches the new content
-        String fileContent = new String(Files.readAllBytes(Paths.get(TEST_FILE_PATH)));
+        // Read the file content to verify it matches the new data
+        List<String[]> fileContent = FileUtil.readFromCSV(TEST_CSV_FILE_PATH);
 
-        // Verify the file content is as expected
-        assertEquals(newContent, fileContent);
+        // Verify that the file content is as expected
+        assertNotNull(fileContent);
+        assertEquals(2, fileContent.size());
+        assertArrayEquals(new String[]{"Charlie", "28", "Teacher"}, fileContent.get(1));
     }
 
-    //@Test
-//    void testReadFromFile() throws IOException {
-//        // Use FileUtil to read content from the file
-//        List<String> content = FileUtil.loadFromFile(TEST_FILE_PATH);
-//
-//        // Verify that the content read matches the initial content
-//        assertNotNull(content);
-//        assertEquals(1, content.size()); // The initial content is a single line
-//        assertEquals(TEST_CONTENT, content.get(0));
-//    }
+    @Test
+    void testReadFromCSV() throws IOException {
+        // Read content from the CSV file
+        List<String[]> content = FileUtil.readFromCSV(TEST_CSV_FILE_PATH);
+
+        // Verify the content read from the file matches the expected data
+        assertNotNull(content);
+        assertEquals(3, content.size());  // 3 lines in the CSV file
+
+        // Check the first line (header)
+        assertArrayEquals(new String[]{"Name", "Age", "Occupation"}, content.get(0));
+
+        // Check the second line (first data row)
+        assertArrayEquals(new String[]{"Alice", "30", "Engineer"}, content.get(1));
+
+        // Check the third line (second data row)
+        assertArrayEquals(new String[]{"Bob", "25", "Doctor"}, content.get(2));
+    }
 
     @Test
-    void testFileNotFound() {
-        // Use FileUtil to read from a non-existent file
-        String nonExistentFilePath = "nonexistentfile.txt";
+    void testReadFromCSVFileNotFound() {
+        // Attempt to read from a non-existent file
+        String nonExistentFilePath = "nonexistentfile.csv";
 
-        Exception exception = assertThrows(IOException.class, () -> {
-            FileUtil.loadFromFile(nonExistentFilePath);
-        });
+        Exception exception = assertThrows(IOException.class, () -> FileUtil.readFromCSV(nonExistentFilePath));
 
         // Verify that the exception message is correct
-        String expectedMessage = "File not found";
+        String expectedMessage = "nonexistentfile.csv (The system cannot find the file specified)";
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
     }
-
 }

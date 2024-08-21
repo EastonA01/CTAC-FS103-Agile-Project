@@ -64,7 +64,7 @@ public class SalesReportService {
             report.append("Items:\n");
             for (MenuItem item : order.getItems()) {
                 String itemName = item.getName();
-                int quantity = entry.getValue(); // TODO: Somehow get the QUANTITY of item in order
+                int quantity = entry.getValue(); // TODO: Somehow get the QUANTITY of item in order; Message to Patrick: IGNORE.
                 double itemPrice = item.getPrice() * quantity;  // Assuming getItemPrice() returns price per item
                 report.append("  - ").append(itemName).append(": ").append(quantity).append(" ($").append(new DecimalFormat("#0.00").format(itemPrice)).append(")\n");
             }

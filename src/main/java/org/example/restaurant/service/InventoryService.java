@@ -52,20 +52,29 @@ public class InventoryService {
         }
     }
 
+    // Updated method to load inventory items from CSV with defensive checks
     private void loadInventoryItemsFromCSV() {
         try (BufferedReader br = new BufferedReader(new FileReader(INVENTORY_CSV_FILE))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
+                if (values.length < 2) {
+                    System.out.println("Skipping malformed line: " + line);
+                    continue; // Skip this line if it doesn't have the expected number of values
+                }
                 String ingredientName = values[0];
                 int quantity = Integer.parseInt(values[1]);
                 inventoryItems.add(new InventoryItem(ingredientName, quantity));
             }
         } catch (IOException e) {
             e.printStackTrace(); // Replace with logging if preferred
+        } catch (NumberFormatException e) {
+            System.err.println("Error parsing quantity value. Please check the CSV file for non-integer values.");
+            e.printStackTrace();
         }
     }
 }
+
 
 
 

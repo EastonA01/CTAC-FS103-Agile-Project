@@ -1,17 +1,10 @@
 package org.example.restaurant.controller;
 
-/*
-Connects the GUI with the TableService.
- */
-
-import org.example.restaurant.service.TableService;
 import org.example.restaurant.gui.TableManagementPanel;
 import org.example.restaurant.model.Table;
+import org.example.restaurant.service.TableService;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
 
 public class TableController {
     private TableService tableService;
@@ -21,55 +14,51 @@ public class TableController {
         this.tableService = tableService;
         this.tableManagementPanel = tableManagementPanel;
 
-        // Set up action listeners for table management panel
         setupActionListeners();
-        loadTableStatusTable();
+        loadTableData();
     }
 
     private void setupActionListeners() {
-        tableManagementPanel.getAssignTableButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                assignTable();
+        tableManagementPanel.getSaveTableButton().addActionListener(e -> saveTable());
+    }
+
+    private void loadTableData() {
+        Object[][] tableData = convertTableListToObjectArray(tableService.getAllTables());
+        tableManagementPanel.updateTableData(tableData);
+    }
+
+    private void saveTable() {
+        int tableId = Integer.parseInt(tableManagementPanel.getTableIdField().getText());
+        String tableName = tableManagementPanel.getTableNameField().getText();
+        int occupants = Integer.parseInt(tableManagementPanel.getOccupantsField().getText());
+        String status = tableManagementPanel.getStatusComboBox().getSelectedItem().toString();
+
+        double totalPrice = 0.0; // Default value
+
+        // Check if the Table ID already exists
+        for (Table existingTable : tableService.getAllTables()) {
+            if (existingTable.getTableId() == tableId) {
+                JOptionPane.showMessageDialog(tableManagementPanel, "Table ID " + tableId + " is already in use.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
             }
-        });
-    }
-
-    private void assignTable() {
-        // Collect data from GUI
-        int tableId;
-        try {
-            tableId = Integer.parseInt(tableManagementPanel.getTableIdField().getText());
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(tableManagementPanel, "Please enter a valid table ID.");
-            return;
         }
 
-        String status = (String) tableManagementPanel.getStatusComboBox().getSelectedItem();
+        Table table = new Table(tableId, tableName, occupants, status, totalPrice);
+        tableService.addTable(table);
 
-        // Update table status via the service
-        tableService.updateTableStatus(tableId, status);
-
-        // Update GUI
-        loadTableStatusTable();
-        JOptionPane.showMessageDialog(tableManagementPanel, "Table status updated successfully!");
+        loadTableData(); // Refresh the table display
     }
 
-    private void loadTableStatusTable() {
-        // Retrieve all tables from the service
-        List<Table> tables = tableService.getAllTables();
-
-        // Prepare data for the table
-        String[] columnNames = {"Table ID", "Size", "Status"};
-        Object[][] data = new Object[tables.size()][3];
+    private Object[][] convertTableListToObjectArray(java.util.List<Table> tables) {
+        Object[][] tableData = new Object[tables.size()][5];
         for (int i = 0; i < tables.size(); i++) {
-            data[i][0] = tables.get(i).getTableId();
-            data[i][1] = tables.get(i).getSize();
-            data[i][2] = tables.get(i).getStatus();
+            Table table = tables.get(i);
+            tableData[i][0] = table.getTableId();
+            tableData[i][1] = table.getTableName();
+            tableData[i][2] = table.getOccupants();
+            tableData[i][3] = table.getStatus();
+            tableData[i][4] = table.getTotalPrice();
         }
-
-        // Update the table in the GUI
-        tableManagementPanel.updateTableStatusTable(data, columnNames);
+        return tableData;
     }
 }
-

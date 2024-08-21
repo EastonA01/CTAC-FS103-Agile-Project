@@ -2,8 +2,10 @@ package org.example.restaurant.gui;
 
 import org.example.restaurant.controller.InventoryController;
 import org.example.restaurant.controller.OrderController;
+import org.example.restaurant.controller.TableController;
 import org.example.restaurant.service.InventoryService;
 import org.example.restaurant.service.OrderService;
+import org.example.restaurant.service.TableService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,12 +22,12 @@ public class MainFrame extends JFrame {
     private JButton inventoryButton;
     private JButton ringInOrdersButton;
     private JButton salesReportsButton;
-    private JButton addTableButton;
-    private JButton removeTableButton;
+    private JButton manageTableButton;
 
     private InventoryManagementPanel inventoryManagementPanel;
     private OrderProcessingPanel orderProcessingPanel;
-    private JMenu backMenu;  // Changed from JButton to JMenu
+    private TableManagementPanel tableManagementPanel;
+    private JMenu backMenu;
 
     public MainFrame(String username) {
         // Initialize components
@@ -42,6 +44,9 @@ public class MainFrame extends JFrame {
 
         // Set up order processing
         setupOrderProcessing();
+
+        // Set up table management
+        setupTableManagement();
     }
 
     // Initialize components
@@ -59,7 +64,7 @@ public class MainFrame extends JFrame {
         mainPanel.add(greetingPanel, BorderLayout.NORTH);
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(5, 1));
+        buttonPanel.setLayout(new GridLayout(4, 1));
 
         inventoryButton = new JButton("Inventory Management");
         inventoryButton.addActionListener(new ActionListener() {
@@ -78,14 +83,21 @@ public class MainFrame extends JFrame {
         });
 
         salesReportsButton = new JButton("View Sales Reports");
-        addTableButton = new JButton("Add Table");
-        removeTableButton = new JButton("Remove Table");
+        manageTableButton = new JButton("Manage Table");
+        manageTableButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showPanel("ManageTable");
+                // Revalidate and repaint to ensure the UI is updated properly
+                contentPanel.revalidate();
+                contentPanel.repaint();
+            }
+        });
 
         buttonPanel.add(inventoryButton);
         buttonPanel.add(ringInOrdersButton);
         buttonPanel.add(salesReportsButton);
-        buttonPanel.add(addTableButton);
-        buttonPanel.add(removeTableButton);
+        buttonPanel.add(manageTableButton);
 
         mainPanel.add(buttonPanel, BorderLayout.CENTER);
 
@@ -113,6 +125,15 @@ public class MainFrame extends JFrame {
         addPanel(orderProcessingPanel, "Orders");
     }
 
+    // Set up table management
+    private void setupTableManagement() {
+        TableService tableService = new TableService();
+        tableManagementPanel = new TableManagementPanel();
+        TableController tableController = new TableController(tableService, tableManagementPanel);
+
+        addPanel(tableManagementPanel, "ManageTable");
+    }
+
     // Set up menus and their action listeners
     private void setupMenu() {
         menuBar = new JMenuBar();
@@ -121,8 +142,7 @@ public class MainFrame extends JFrame {
         JMenuItem inventoryMenuItem = new JMenuItem("Inventory Management");
         JMenuItem orderMenuItem = new JMenuItem("Ring in Orders");
         JMenuItem reportsMenuItem = new JMenuItem("View Sales Reports");
-        JMenuItem addTableMenuItem = new JMenuItem("Add Table");
-        JMenuItem removeTableMenuItem = new JMenuItem("Remove Table");
+        JMenuItem manageTableMenuItem = new JMenuItem("Manage Table");
         JMenuItem exitMenuItem = new JMenuItem("Exit");
 
         inventoryMenuItem.addActionListener(new ActionListener() {
@@ -146,17 +166,13 @@ public class MainFrame extends JFrame {
             }
         });
 
-        addTableMenuItem.addActionListener(new ActionListener() {
+        manageTableMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                showPanel("AddTable");
-            }
-        });
-
-        removeTableMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showPanel("RemoveTable");
+                showPanel("ManageTable");
+                // Revalidate and repaint to ensure the UI is updated properly
+                contentPanel.revalidate();
+                contentPanel.repaint();
             }
         });
 
@@ -170,8 +186,7 @@ public class MainFrame extends JFrame {
         menu.add(inventoryMenuItem);
         menu.add(orderMenuItem);
         menu.add(reportsMenuItem);
-        menu.add(addTableMenuItem);
-        menu.add(removeTableMenuItem);
+        menu.add(manageTableMenuItem);
         menu.addSeparator();
         menu.add(exitMenuItem);
 
@@ -210,6 +225,3 @@ public class MainFrame extends JFrame {
         contentPanel.add(panel, panelName);
     }
 }
-
-
-

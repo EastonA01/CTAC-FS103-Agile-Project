@@ -1,75 +1,117 @@
 package org.example.restaurant.gui;
 
-/*
-Interface for managing tables.
- */
 import javax.swing.*;
 import java.awt.*;
 
 public class TableManagementPanel extends JPanel {
-    private JTable tableStatusTable;
-    private JButton assignTableButton;
     private JTextField tableIdField;
+    private JTextField tableNameField;
+    private JTextField occupantsField;
     private JComboBox<String> statusComboBox;
+    private JButton saveTableButton;
+    private JButton deleteTableButton;
+    private JTable table;
 
     public TableManagementPanel() {
-        // Initialize components
-        tableStatusTable = new JTable(); // This will be populated with table data later
-        assignTableButton = new JButton("Assign Table");
-        tableIdField = new JTextField(5);
-        statusComboBox = new JComboBox<>(new String[]{"Available", "Reserved", "Occupied"});
-
-        // Set up layout
+        // Set up the layout and components
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.anchor = GridBagConstraints.WEST;
 
+        // Add Table ID field
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(new JLabel("Table ID:"), gbc);
-
+        tableIdField = new JTextField(15);  // Smaller size
         gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         add(tableIdField, gbc);
 
+        // Add Table Name field
         gbc.gridx = 0;
         gbc.gridy = 1;
-        add(new JLabel("Status:"), gbc);
-
+        add(new JLabel("Table Name:"), gbc);
+        tableNameField = new JTextField(15);  // Smaller size
         gbc.gridx = 1;
-        add(statusComboBox, gbc);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        add(tableNameField, gbc);
 
+        // Add Occupants field
         gbc.gridx = 0;
         gbc.gridy = 2;
-        gbc.gridwidth = 2;
-        add(assignTableButton, gbc);
+        add(new JLabel("Number of Occupants:"), gbc);
+        occupantsField = new JTextField(15);  // Smaller size
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        add(occupantsField, gbc);
 
+        // Add Status ComboBox
+        gbc.gridx = 0;
         gbc.gridy = 3;
+        add(new JLabel("Status:"), gbc);
+        String[] statusOptions = {"Available", "Reserved", "Occupied"};
+        statusComboBox = new JComboBox<>(statusOptions);
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        add(statusComboBox, gbc);
+
+        // Add Save Table button
+        saveTableButton = new JButton("Save Table");
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(saveTableButton, gbc);
+
+        // Add Delete Table button
+        deleteTableButton = new JButton("Delete Table");
+        gbc.gridy = 5;
+        add(deleteTableButton, gbc);
+
+        // Add Table Display (JTable)
+        table = new JTable();
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);  // Allow single row selection
+        table.setColumnSelectionAllowed(false);  // Disable column selection
+        gbc.gridx = 0;
+        gbc.gridy = 6;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
-        add(new JScrollPane(tableStatusTable), gbc);
-    }
-
-    // Getters for components
-    public JButton getAssignTableButton() {
-        return assignTableButton;
+        add(new JScrollPane(table), gbc);
     }
 
     public JTextField getTableIdField() {
         return tableIdField;
     }
 
+    public JTextField getTableNameField() {
+        return tableNameField;
+    }
+
+    public JTextField getOccupantsField() {
+        return occupantsField;
+    }
+
     public JComboBox<String> getStatusComboBox() {
         return statusComboBox;
     }
 
-    public JTable getTableStatusTable() {
-        return tableStatusTable;
+    public JButton getSaveTableButton() {
+        return saveTableButton;
     }
 
-    public void updateTableStatusTable(Object[][] data, String[] columnNames) {
-        tableStatusTable.setModel(new javax.swing.table.DefaultTableModel(data, columnNames));
+    public JButton getDeleteTableButton() {
+        return deleteTableButton;
+    }
+
+    public JTable getTable() {
+        return table;
+    }
+
+    public void updateTableData(Object[][] data) {
+        String[] columnNames = {"Table ID", "Table Name", "Occupants", "Status", "Total Price"};
+        table.setModel(new javax.swing.table.DefaultTableModel(data, columnNames));
     }
 }

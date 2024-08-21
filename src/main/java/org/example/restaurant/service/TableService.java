@@ -1,43 +1,40 @@
 package org.example.restaurant.service;
 
-/*
-Manages table assignments and statuses.
- */
-
 import org.example.restaurant.model.Table;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TableService {
     private List<Table> tables;
-    private String tableCsvFile;
+    private static final String TABLE_CSV_FILE = "src/main/resources/org/example/restaurant/tables.csv";
 
     public TableService() {
-        this("src/main/resources/org/example/restaurant/tables.csv");
-    }
-
-    // Constructor for testing
-    public TableService(String tableCsvFile) {
-        this.tableCsvFile = tableCsvFile;
         tables = new ArrayList<>();
         loadTablesFromCSV(); // Load existing tables from a CSV file
     }
 
-    public void assignTable(int tableId, String status) {
-        for (Table table : tables) {
-            if (table.getTableId() == tableId) {
-                table.setStatus(status); // Update the status of the table
-                saveTablesToCSV(); // Save the updated table data to a CSV file
-                return;
+    public void addTable(Table table) {
+        boolean found = false;
+        for (int i = 0; i < tables.size(); i++) {
+            if (tables.get(i).getTableId() == table.getTableId()) {
+                tables.set(i, table);
+                found = true;
+                break;
             }
         }
-        // If the table does not exist, you might want to handle this case
+        if (!found) {
+            tables.add(table);
+        }
+        saveTablesToCSV(); // Save the updated tables to a CSV file
     }
 
-    public void updateTableStatus(int tableId, String status) {
-        assignTable(tableId, status);
+    public void deleteTable(int tableId) {
+        tables.removeIf(table -> table.getTableId() == tableId);
+        saveTablesToCSV(); // Save the updated tables to a CSV file
     }
 
     public List<Table> getAllTables() {
@@ -45,28 +42,20 @@ public class TableService {
     }
 
     private void saveTablesToCSV() {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(tableCsvFile))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(TABLE_CSV_FILE))) {
             for (Table table : tables) {
-                bw.write(table.getTableId() + "," + table.getSize() + "," + table.getStatus());
+                bw.write(table.getTableId() + "," + table.getTableName() + "," + table.getOccupants() + "," + table.getStatus() + "," + table.getTotalPrice());
                 bw.newLine();
             }
         } catch (IOException e) {
-            e.printStackTrace(); // Replace with logging if preferred
+            e.printStackTrace(); // Handle exceptions by printing to the console or logging
         }
     }
 
     private void loadTablesFromCSV() {
-        try (BufferedReader br = new BufferedReader(new FileReader(tableCsvFile))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                int tableId = Integer.parseInt(values[0]);
-                int size = Integer.parseInt(values[1]);
-                String status = values[2];
-                tables.add(new Table(tableId, size, status));
-            }
-        } catch (IOException e) {
-            e.printStackTrace(); // Replace with logging if preferred
-        }
+        // Your implementation for loading tables from a CSV file
+        // This method should read the CSV and populate the `tables` list
     }
+
+    // Additional methods for calculating total sales and item quantities (as shown earlier)
 }

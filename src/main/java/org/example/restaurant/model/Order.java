@@ -1,9 +1,5 @@
 package org.example.restaurant.model;
 
-/*
-Represents an order with attributes like order ID, list of items, total price, status.
- */
-
 import java.util.List;
 
 public class Order {
@@ -30,6 +26,7 @@ public class Order {
     public List<MenuItem> getItems() {
         return items;
     }
+
     public void setItems(List<MenuItem> items) {
         this.items = items;
     }

@@ -1,9 +1,5 @@
 package org.example.restaurant.service;
 
-/*
-Handles order processing, updating order statuses, and calculating total prices.
- */
-
 import org.example.restaurant.model.MenuItem;
 import org.example.restaurant.model.Order;
 
@@ -16,19 +12,16 @@ public class OrderService {
     private static final String ORDERS_CSV_FILE = "src/main/resources/org/example/restaurant/orders.csv";
 
     public OrderService() {
-        // Initialize orders list (maybe load from file)
         orders = new ArrayList<>();
         loadOrdersFromCSV(); // Load existing orders from a CSV file
     }
 
     public void addOrder(Order order) {
-        // Add a new order
         orders.add(order);
         saveOrdersToCSV(); // Save the updated orders list to a CSV file
     }
 
     public void updateOrderStatus(String orderId, String status) {
-        // Update the status of an order by ID
         for (Order order : orders) {
             if (order.getOrderId().equals(orderId)) {
                 order.setStatus(status);
@@ -39,11 +32,9 @@ public class OrderService {
     }
 
     public List<Order> getAllOrders() {
-        // Return all orders
         return new ArrayList<>(orders); // Return a copy of the list
     }
 
-    // Implement methods to load and save orders to file
     private void saveOrdersToCSV() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(ORDERS_CSV_FILE))) {
             for (Order order : orders) {
@@ -92,4 +83,3 @@ public class OrderService {
         return items;
     }
 }
-

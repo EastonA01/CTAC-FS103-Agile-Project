@@ -130,8 +130,4 @@ public class SalesReportService {
             throw new RuntimeException(e);
         }
     }
-
-    public static void main(String[] args) {
-
-    }
 }

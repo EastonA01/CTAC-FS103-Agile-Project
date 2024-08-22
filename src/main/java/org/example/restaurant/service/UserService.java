@@ -9,6 +9,7 @@ import org.example.restaurant.util.FileUtil;
 import org.example.restaurant.util.HashUtil;
 import org.mindrot.jbcrypt.BCrypt;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -126,5 +127,41 @@ public class UserService {
             }
         }
         return null;
+    }
+
+    public void createUser(){
+        try{
+            String username = JOptionPane.showInputDialog("Please Input a Username");
+            if(!username.isEmpty()) {
+                String password = JOptionPane.showInputDialog("Please Input a Password");
+                if(!password.isEmpty()) {
+                    String password2 = JOptionPane.showInputDialog("Please Confirm Password");
+                    if(password.equals(password2)) {
+                        int response = JOptionPane.showConfirmDialog(null,"Is this user a manager?");
+                        User user;
+                        if(response == JOptionPane.CANCEL_OPTION) {
+                            JOptionPane.showMessageDialog(null,"User Creation Canceled");
+                            return;
+                        }
+                        if(response == JOptionPane.YES_OPTION) {
+                            user = new User(username, HashUtil.hashPassword(password), "manager");
+                        }
+                        else{
+                            user = new User(username, HashUtil.hashPassword(password), "server");
+                        }
+                        addUser(user);
+                    }else{
+                        JOptionPane.showMessageDialog(null,"Passwords do not match");
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(null,"Please Input a password");
+                }
+            }else{
+                JOptionPane.showMessageDialog(null,"Please Input a Username");
+            }
+        }catch (Exception ex){
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+            System.out.println(ex.getMessage());
+        }
     }
 }

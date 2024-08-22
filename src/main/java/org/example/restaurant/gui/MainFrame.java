@@ -3,6 +3,7 @@ package org.example.restaurant.gui;
 import org.example.restaurant.controller.InventoryController;
 import org.example.restaurant.controller.OrderController;
 import org.example.restaurant.controller.TableController;
+import org.example.restaurant.model.User;
 import org.example.restaurant.service.*;
 
 import javax.swing.*;
@@ -181,6 +182,7 @@ public class MainFrame extends JFrame {
         JMenuItem reportsMenuItem = new JMenuItem("View Sales Reports");
         JMenuItem manageTableMenuItem = new JMenuItem("Manage Table");
         JMenuItem manageMenuItems = new JMenuItem("Manage Menu");
+        JMenuItem createUserMenuItem = new JMenuItem("Create User");
         JMenuItem exitMenuItem = new JMenuItem("Exit");
 
         inventoryMenuItem.addActionListener(new ActionListener() {
@@ -224,6 +226,14 @@ public class MainFrame extends JFrame {
             }
         });
 
+        createUserMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                UserService userService = new UserService();
+                userService.createUser();
+            }
+        });
+
         exitMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -236,6 +246,7 @@ public class MainFrame extends JFrame {
         menu.add(reportsMenuItem);
         menu.add(manageTableMenuItem);
         menu.add(manageMenuItems);
+        menu.add(createUserMenuItem);
         menu.addSeparator();
         menu.add(exitMenuItem);
 

@@ -53,6 +53,7 @@ public class TableController {
         tableManagementPanel.updateTableData(data);
     }
 
+
     private void saveTable() {
         try {
             int tableId = Integer.parseInt(tableManagementPanel.getTableIdField().getText());

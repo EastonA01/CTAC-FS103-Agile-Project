@@ -1,6 +1,7 @@
 package org.example.restaurant.service;
 
 import org.example.restaurant.model.Table;
+import org.example.restaurant.model.Order;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -54,6 +55,14 @@ public class TableService {
                 .orElse(null);
     }
 
+    public void addOrderToTable(int tableId, Order order) {
+        Table table = getTableById(tableId);
+        if (table != null) {
+            table.addOrder(order);
+            saveTablesToCSV();  // Save updated list
+        }
+    }
+
     private void saveTablesToCSV() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(TABLE_CSV_FILE))) {
             for (Table table : tables) {
@@ -95,4 +104,3 @@ public class TableService {
         }
     }
 }
-

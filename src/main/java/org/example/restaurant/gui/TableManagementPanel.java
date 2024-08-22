@@ -1,5 +1,8 @@
 package org.example.restaurant.gui;
 
+import org.example.restaurant.controller.TableController;
+import org.example.restaurant.service.TableService;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -11,6 +14,10 @@ public class TableManagementPanel extends JPanel {
     private JButton saveTableButton;
     private JButton deleteTableButton;
     private JTable table;
+
+    // Declare the services and controllers
+    private TableService tableService;
+    private TableController tableController;
 
     public TableManagementPanel() {
         setLayout(new GridBagLayout());
@@ -77,6 +84,10 @@ public class TableManagementPanel extends JPanel {
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         add(new JScrollPane(table), gbc);
+
+        // Initialize services and controllers
+        tableService = new TableService();
+        tableController = new TableController(tableService, this);
     }
 
     public JTextField getTableIdField() {
@@ -110,5 +121,26 @@ public class TableManagementPanel extends JPanel {
     public void updateTableData(Object[][] data) {
         String[] columnNames = {"Table ID", "Table Name", "Occupants", "Status", "Total Price"};
         table.setModel(new javax.swing.table.DefaultTableModel(data, columnNames));
+    }
+
+    // Setup the table management in the panel
+    private void setupTableManagement() {
+        tableService = new TableService();  // Ensure tableService is initialized
+        tableController = new TableController(tableService, this); // Attach controller
+
+        addPanel(this, "ManageTable"); // Add panel to the content panel
+    }
+
+    private void showPanel(String panelName) {
+        CardLayout cardLayout = (CardLayout) getLayout();
+        if (panelName.equals("ManageTable")) {
+            tableService = new TableService(); // Reload or refresh the table data
+            setupTableManagement(); // Resetup table management to refresh the data
+        }
+        cardLayout.show(this, panelName);
+    }
+
+    private void addPanel(JPanel panel, String panelName) {
+        add(panel, panelName);
     }
 }

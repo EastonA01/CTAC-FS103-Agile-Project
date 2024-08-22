@@ -149,12 +149,22 @@ public class MainFrame extends JFrame {
 
     // Set up table management
     private void setupTableManagement() {
-        tableService = new TableService();
-        tableManagementPanel = new TableManagementPanel();
-        TableController tableController = new TableController(tableService, tableManagementPanel);
+        tableService = new TableService();  // Ensure tableService is initialized
+        tableManagementPanel = new TableManagementPanel();  // Initialize the panel
+        TableController tableController = new TableController(tableService, tableManagementPanel);  // Attach controller
 
-        addPanel(tableManagementPanel, "ManageTable");
+        addPanel(tableManagementPanel, "ManageTable");  // Add panel to the content panel
     }
+
+    private void showPanel(String panelName) {
+        CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+        if (panelName.equals("ManageTable")) {
+            // Reload the table data to ensure it reflects the latest orders
+            setupTableManagement();  // Resetup table management to refresh the data
+        }
+        cardLayout.show(contentPanel, panelName);
+    }
+
 
     // Set up Sales Report
     private void setupSalesReport(){
@@ -275,11 +285,6 @@ public class MainFrame extends JFrame {
         setVisible(true);
     }
 
-    // Implement methods to switch between different panels
-    private void showPanel(String panelName) {
-        CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-        cardLayout.show(contentPanel, panelName);
-    }
 
     public void addPanel(JPanel panel, String panelName) {
         contentPanel.add(panel, panelName);

@@ -70,7 +70,6 @@ public class Table {
         updateTotalPrice();
     }
 
-    // New method to remove an order and update the total price
     public void removeOrder(Order order) {
         orders.remove(order);
         updateTotalPrice();
@@ -80,6 +79,7 @@ public class Table {
         totalPrice = orders.stream().mapToDouble(Order::getTotalPrice).sum();
     }
 
+    // This is the method you need for your SalesReportService
     public double getTotalSales() {
         return totalPrice;
     }

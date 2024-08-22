@@ -1,9 +1,5 @@
 package org.example.restaurant.controller;
 
-/*
-Connects the GUI with the OrderService.
- */
-
 import org.example.restaurant.service.OrderService;
 import org.example.restaurant.gui.OrderProcessingPanel;
 import org.example.restaurant.model.Order;
@@ -21,12 +17,12 @@ public class OrderController {
         this.orderService = orderService;
         this.orderProcessingPanel = orderProcessingPanel;
 
-        // TODO: Set up action listeners for order processing panel
+        // Set up action listeners for order processing panel
         setupActionListeners();
         loadOrderTable();
     }
 
-    // TODO: Implement methods to interact with OrderService
+    // Set up action listeners
     private void setupActionListeners() {
         orderProcessingPanel.getMarkAsPreparingButton().addActionListener(new ActionListener() {
             @Override
@@ -46,7 +42,8 @@ public class OrderController {
     private void markOrderAsPreparing() {
         int selectedRow = orderProcessingPanel.getOrderTable().getSelectedRow();
         if (selectedRow >= 0) {
-            String orderId = (String) orderProcessingPanel.getOrderTable().getValueAt(selectedRow, 0);
+            String orderIdStr = (String) orderProcessingPanel.getOrderTable().getValueAt(selectedRow, 0);
+            int orderId = Integer.parseInt(orderIdStr);  // Convert String to int
             orderService.updateOrderStatus(orderId, "Preparing");
             loadOrderTable();
             JOptionPane.showMessageDialog(orderProcessingPanel, "Order marked as Preparing.");
@@ -58,7 +55,8 @@ public class OrderController {
     private void markOrderAsReady() {
         int selectedRow = orderProcessingPanel.getOrderTable().getSelectedRow();
         if (selectedRow >= 0) {
-            String orderId = (String) orderProcessingPanel.getOrderTable().getValueAt(selectedRow, 0);
+            String orderIdStr = (String) orderProcessingPanel.getOrderTable().getValueAt(selectedRow, 0);
+            int orderId = Integer.parseInt(orderIdStr);  // Convert String to int
             orderService.updateOrderStatus(orderId, "Ready");
             loadOrderTable();
             JOptionPane.showMessageDialog(orderProcessingPanel, "Order marked as Ready.");
@@ -85,4 +83,3 @@ public class OrderController {
         orderProcessingPanel.updateOrderTable(data, columnNames);
     }
 }
-

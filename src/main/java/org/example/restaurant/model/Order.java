@@ -1,49 +1,44 @@
 package org.example.restaurant.model;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Order {
-    private String orderId;
-    private List<MenuItem> items;
+    private int orderId;
+    private int tableId;
+    private Map<String, Integer> items;  // Item name to quantity
     private double totalPrice;
-    private String status;
 
-    public Order(String orderId, List<MenuItem> items, double totalPrice, String status) {
+    public Order(int orderId, int tableId) {
         this.orderId = orderId;
-        this.items = items;
-        this.totalPrice = totalPrice;
-        this.status = status;
+        this.tableId = tableId;
+        this.items = new HashMap<>();
+        this.totalPrice = 0.0;
     }
 
-    public String getOrderId() {
+    public int getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
+    public int getTableId() {
+        return tableId;
     }
 
-    public List<MenuItem> getItems() {
+    public Map<String, Integer> getItems() {
         return items;
     }
 
-    public void setItems(List<MenuItem> items) {
-        this.items = items;
+    public void addItem(String itemName, int quantity, double pricePerUnit) {
+        items.put(itemName, items.getOrDefault(itemName, 0) + quantity);
+        totalPrice += quantity * pricePerUnit;
     }
 
     public double getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
+    // Optional: If you want to track the status in the future, you can add this method
     public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+        return "Completed";  // Placeholder status, as the original class doesn't track status
     }
 }

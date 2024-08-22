@@ -1,7 +1,7 @@
 package org.example.restaurant.model;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Table {
     private int tableId;
@@ -9,15 +9,15 @@ public class Table {
     private int occupants;
     private String status;
     private double totalPrice;
-    private Map<String, Integer> items; // Map of item name to quantity
+    private List<Order> orders;  // New list to store orders associated with the table
 
-    public Table(int tableId, String tableName, int occupants, String status, double totalPrice) {
+    public Table(int tableId, String tableName, int occupants, String status) {
         this.tableId = tableId;
         this.tableName = tableName;
         this.occupants = occupants;
         this.status = status;
-        this.totalPrice = totalPrice;
-        this.items = new HashMap<>();
+        this.totalPrice = 0.0;
+        this.orders = new ArrayList<>();
     }
 
     // Getters and setters
@@ -61,20 +61,20 @@ public class Table {
         this.totalPrice = totalPrice;
     }
 
-    public Map<String, Integer> getItems() {
-        return items;
+    public List<Order> getOrders() {
+        return orders;
     }
 
-    public void addItem(String itemName, int quantity, double pricePerUnit) {
-        items.put(itemName, items.getOrDefault(itemName, 0) + quantity);
-        this.totalPrice += quantity * pricePerUnit; // Update total price based on the new items
+    public void addOrder(Order order) {
+        orders.add(order);
+        updateTotalPrice();
     }
 
-    public int getItemQuantity(String itemName) {
-        return items.getOrDefault(itemName, 0);
+    private void updateTotalPrice() {
+        totalPrice = orders.stream().mapToDouble(Order::getTotalPrice).sum();
     }
 
-    public double calculateTotalSales() {
-        return this.totalPrice;
+    public double getTotalSales() {
+        return totalPrice;
     }
 }

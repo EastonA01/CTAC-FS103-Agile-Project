@@ -1,6 +1,7 @@
 package org.example.restaurant.controller;
 
 import org.example.restaurant.gui.TableManagementPanel;
+import org.example.restaurant.model.Order;
 import org.example.restaurant.model.Table;
 import org.example.restaurant.service.TableService;
 
@@ -33,8 +34,6 @@ public class TableController {
         int occupants = Integer.parseInt(tableManagementPanel.getOccupantsField().getText());
         String status = tableManagementPanel.getStatusComboBox().getSelectedItem().toString();
 
-        double totalPrice = 0.0; // Default value
-
         // Check if the Table ID already exists
         for (Table existingTable : tableService.getAllTables()) {
             if (existingTable.getTableId() == tableId) {
@@ -43,9 +42,14 @@ public class TableController {
             }
         }
 
-        Table table = new Table(tableId, tableName, occupants, status, totalPrice);
+        Table table = new Table(tableId, tableName, occupants, status);
         tableService.addTable(table);
 
+        loadTableData(); // Refresh the table display
+    }
+
+    public void addOrderToTable(int tableId, Order order) {
+        tableService.addOrderToTable(tableId, order);
         loadTableData(); // Refresh the table display
     }
 
@@ -57,7 +61,7 @@ public class TableController {
             tableData[i][1] = table.getTableName();
             tableData[i][2] = table.getOccupants();
             tableData[i][3] = table.getStatus();
-            tableData[i][4] = table.getTotalPrice();
+            tableData[i][4] = table.getTotalSales();  // Use getTotalSales() method to show total price
         }
         return tableData;
     }

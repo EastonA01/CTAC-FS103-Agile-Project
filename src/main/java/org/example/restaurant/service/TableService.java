@@ -71,16 +71,28 @@ public class TableService {
         try (BufferedReader br = new BufferedReader(new FileReader(TABLE_CSV_FILE))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                int tableId = Integer.parseInt(values[0]);
-                String tableName = values[1];
-                int occupants = Integer.parseInt(values[2]);
-                String status = values[3];
-                double totalPrice = Double.parseDouble(values[4]);
-                tables.add(new Table(tableId, tableName, occupants, status));
+                String[] values = line.split(",", 5); // Ensure there are exactly 5 values
+                if (values.length >= 5) {
+                    try {
+                        int tableId = Integer.parseInt(values[0].trim());
+                        String tableName = values[1].trim();
+                        int occupants = Integer.parseInt(values[2].trim());
+                        String status = values[3].trim();
+                        double totalPrice = Double.parseDouble(values[4].trim());
+
+                        Table table = new Table(tableId, tableName, occupants, status);
+                        table.setTotalPrice(totalPrice);
+                        tables.add(table);
+                    } catch (NumberFormatException e) {
+                        System.err.println("Skipping invalid line in CSV: " + line);
+                    }
+                } else {
+                    System.err.println("Skipping invalid line in CSV: " + line);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();  // Replace with logging if preferred
         }
     }
 }
+

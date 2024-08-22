@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
-
 public class OrderService {
     private List<Order> orders;
     private static final String ORDERS_CSV_FILE = "src/main/resources/org/example/restaurant/orders.csv";
@@ -24,8 +23,13 @@ public class OrderService {
     }
 
     public void updateOrderStatus(int orderId, String status) {
-        // Since your original Order class doesn't have a status, this is a placeholder
-        // to demonstrate where you would update the order's status if you implemented it.
+        for (Order order : orders) {
+            if (order.getOrderId() == orderId) {
+                order.setStatus(status);
+                saveOrdersToCSV(); // Save the updated orders list to a CSV file
+                break;
+            }
+        }
     }
 
     public List<Order> getAllOrders() {
@@ -35,8 +39,8 @@ public class OrderService {
     private void saveOrdersToCSV() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(ORDERS_CSV_FILE))) {
             for (Order order : orders) {
-                bw.write(order.getOrderId() + "," + convertItemsToString(order.getItems()) + "," +
-                        order.getTotalPrice());
+                bw.write(order.getOrderId() + "," + order.getTableId() + "," + convertItemsToString(order.getItems()) + "," +
+                        order.getTotalPrice() + "," + order.getStatus());
                 bw.newLine();
             }
         } catch (IOException e) {
@@ -48,14 +52,24 @@ public class OrderService {
         try (BufferedReader br = new BufferedReader(new FileReader(ORDERS_CSV_FILE))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] values = line.split(",", 3);
-                int orderId = Integer.parseInt(values[0]);
-                int tableId = Integer.parseInt(values[1]);
-                Map<String, Integer> items = parseItemsString(values[2]);
-                double totalPrice = Double.parseDouble(values[3]);
-                Order order = new Order(orderId, tableId);
-                order.getItems().putAll(items); // Add the items to the order
-                orders.add(order);
+                String[] values = line.split(",", 5); // Updated to expect 5 columns now
+                if (values.length >= 5) {
+                    try {
+                        int orderId = Integer.parseInt(values[0].trim());
+                        int tableId = Integer.parseInt(values[1].trim());
+                        Map<String, Integer> items = parseItemsString(values[2]);
+                        double totalPrice = Double.parseDouble(values[3].trim());
+                        String status = values[4].trim();
+                        Order order = new Order(orderId, tableId);
+                        order.getItems().putAll(items); // Add the items to the order
+                        order.setStatus(status);
+                        orders.add(order);
+                    } catch (NumberFormatException e) {
+                        System.err.println("Skipping invalid line in CSV due to number format issue: " + line);
+                    }
+                } else {
+                    System.err.println("Skipping invalid line in CSV: " + line);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace(); // Replace with logging if preferred
@@ -78,10 +92,22 @@ public class OrderService {
         String[] itemPairs = itemsString.split(";");
         for (String pair : itemPairs) {
             String[] itemData = pair.split(":");
-            String itemName = itemData[0];
-            int quantity = Integer.parseInt(itemData[1]);
-            items.put(itemName, quantity);
+            if (itemData.length == 2) { // Check if the split resulted in two parts
+                try {
+                    String itemName = itemData[0].trim();
+                    int quantity = Integer.parseInt(itemData[1].trim());
+                    items.put(itemName, quantity);
+                } catch (NumberFormatException e) {
+                    System.err.println("Invalid quantity format in pair: " + pair);
+                }
+            } else {
+                System.err.println("Skipping invalid item pair: " + pair);
+            }
         }
         return items;
     }
 }
+
+
+
+

@@ -86,6 +86,7 @@ public class MainFrame extends JFrame {
         ringInOrdersButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                setupOrderProcessing();
                 showPanel("Orders");
             }
         });
@@ -133,11 +134,13 @@ public class MainFrame extends JFrame {
     // Set up order processing
     private void setupOrderProcessing() {
         orderService = new OrderService();
+        tableService = new TableService(); // Make sure this is initialized before passing it
         orderProcessingPanel = new OrderProcessingPanel();
-        OrderController orderController = new OrderController(orderService, orderProcessingPanel);
+        OrderController orderController = new OrderController(orderService, tableService, orderProcessingPanel);
 
         addPanel(orderProcessingPanel, "Orders");
     }
+
 
     // Set up table management
     private void setupTableManagement() {

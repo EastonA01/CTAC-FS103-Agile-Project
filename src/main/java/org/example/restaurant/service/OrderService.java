@@ -60,7 +60,7 @@ public class OrderService {
                         Map<String, Integer> items = parseItemsString(values[2]);
                         double totalPrice = Double.parseDouble(values[3].trim());
                         String status = values[4].trim();
-                        Order order = new Order(orderId, tableId);
+                        Order order = new Order(orderId, tableId, totalPrice);
                         order.getItems().putAll(items); // Add the items to the order
                         order.setStatus(status);
                         orders.add(order);

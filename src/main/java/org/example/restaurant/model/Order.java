@@ -1,7 +1,10 @@
 package org.example.restaurant.model;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
+
+import static jdk.nashorn.internal.objects.NativeMath.round;
 
 public class Order {
     private int orderId;
@@ -9,13 +12,14 @@ public class Order {
     private Map<String, Integer> items;  // Item name to quantity
     private double totalPrice;
     private String status;  // New field to track the status of the order
+    private DecimalFormat df = new DecimalFormat("####0.00");
 
     // Constructor
-    public Order(int orderId, int tableId) {
+    public Order(int orderId, int tableId, double totalPrice) {
         this.orderId = orderId;
         this.tableId = tableId;
         this.items = new HashMap<>();
-        this.totalPrice = 0.0;
+        this.totalPrice = Double.parseDouble(df.format(totalPrice));
         this.status = "New";  // Default status
     }
 

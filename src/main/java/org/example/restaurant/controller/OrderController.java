@@ -187,7 +187,7 @@ public class OrderController {
 
                 if (selectedMenuItem != null) {
                     // Create a new order with the selected table ID and order ID
-                    Order order = new Order(orderId, tableId);
+                    Order order = new Order(orderId, tableId, selectedMenuItem.getPrice());
 
                     // Add the selected item to the order with the specified quantity and price
                     order.addItem(selectedMenuItem.getName(), quantity, selectedMenuItem.getPrice());

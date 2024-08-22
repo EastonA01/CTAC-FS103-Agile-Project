@@ -3,9 +3,7 @@ package org.example.restaurant.gui;
 import org.example.restaurant.controller.InventoryController;
 import org.example.restaurant.controller.OrderController;
 import org.example.restaurant.controller.TableController;
-import org.example.restaurant.service.InventoryService;
-import org.example.restaurant.service.OrderService;
-import org.example.restaurant.service.TableService;
+import org.example.restaurant.service.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +25,14 @@ public class MainFrame extends JFrame {
     private InventoryManagementPanel inventoryManagementPanel;
     private OrderProcessingPanel orderProcessingPanel;
     private TableManagementPanel tableManagementPanel;
+    private SalesReportPanel salesReportPanel;
     private JMenu backMenu;
+
+    private InventoryService inventoryService;
+    private OrderService orderService;
+    private SalesReportService salesReportService;
+    private TableService tableService;
+    private MenuService menuService =  new MenuService();
 
     public MainFrame(String username) {
         // Initialize components
@@ -47,6 +52,9 @@ public class MainFrame extends JFrame {
 
         // Set up table management
         setupTableManagement();
+
+        // Set up Sales Report
+        setupSalesReport();
     }
 
     // Initialize components
@@ -83,6 +91,12 @@ public class MainFrame extends JFrame {
         });
 
         salesReportsButton = new JButton("View Sales Reports");
+        salesReportsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showPanel("Sales");
+            }
+        });
         manageTableButton = new JButton("Manage Table");
         manageTableButton.addActionListener(new ActionListener() {
             @Override
@@ -109,7 +123,7 @@ public class MainFrame extends JFrame {
 
     // Set up inventory management
     private void setupInventoryManagement() {
-        InventoryService inventoryService = new InventoryService();
+        inventoryService = new InventoryService();
         inventoryManagementPanel = new InventoryManagementPanel();
         InventoryController inventoryController = new InventoryController(inventoryService, inventoryManagementPanel);
 
@@ -118,7 +132,7 @@ public class MainFrame extends JFrame {
 
     // Set up order processing
     private void setupOrderProcessing() {
-        OrderService orderService = new OrderService();
+        orderService = new OrderService();
         orderProcessingPanel = new OrderProcessingPanel();
         OrderController orderController = new OrderController(orderService, orderProcessingPanel);
 
@@ -127,11 +141,19 @@ public class MainFrame extends JFrame {
 
     // Set up table management
     private void setupTableManagement() {
-        TableService tableService = new TableService();
+        tableService = new TableService();
         tableManagementPanel = new TableManagementPanel();
         TableController tableController = new TableController(tableService, tableManagementPanel);
 
         addPanel(tableManagementPanel, "ManageTable");
+    }
+
+    // Set up Sales Report
+    private void setupSalesReport(){
+        SalesReportService salesReportService = new SalesReportService(orderService.getAllOrders(), menuService.getAllMenuItems());
+        salesReportPanel = new SalesReportPanel(salesReportService, tableService);
+
+        addPanel(salesReportPanel, "Sales");
     }
 
     // Set up menus and their action listeners
@@ -162,7 +184,7 @@ public class MainFrame extends JFrame {
         reportsMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                showPanel("Reports");
+                showPanel("Sales");
             }
         });
 

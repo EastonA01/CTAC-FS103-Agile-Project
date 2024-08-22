@@ -14,9 +14,11 @@ import java.util.*;
 
 public class SalesReportService {
     private List<Order> orders;
+    private List<MenuItem> menuItems;
 
-    public SalesReportService(List<Order> orders) {
+    public SalesReportService(List<Order> orders, List<MenuItem> menuItems) {
         this.orders = orders;
+        this.menuItems = menuItems;
     }
 
     public String generateDailySalesReport(TableService tableService) {
@@ -49,7 +51,7 @@ public class SalesReportService {
         // Calculate and display table sales
         report.append("Table Sales:\n");
         List<Table> tables = tableService.getAllTables();
-        tables.sort((t1, t2) -> Double.compare(t2.getTotalSales(), t1.getTotalSales()));  // Sort tables by total sales TODO: implement getTotalSales
+        tables.sort((t1, t2) -> Double.compare(t2.getTotalSales(), t1.getTotalSales()));  // Sort tables by total sales
         for (int i = 0; i < Math.min(tables.size(), 3); i++) {  // Display top 3 tables
             Table table = tables.get(i);
             report.append(i + 1).append(". Table ").append(table.getTableId()).append(": $").append(new DecimalFormat("#0.00").format(table.getTotalSales())).append("\n");
@@ -60,13 +62,21 @@ public class SalesReportService {
         report.append("Detailed Orders:\n");
         for (Order order : orders) {
             report.append("Order ID: #").append(order.getOrderId()).append("\n");
-            report.append("Table ID: ").append(order.getTableId()).append("\n"); // TODO: Implement getTableId
+            report.append("Table ID: ").append(order.getTableId()).append("\n");
             report.append("Items:\n");
-            for (MenuItem item : order.getItems()) {
-                String itemName = item.getName();
-                int quantity = entry.getValue(); // TODO: Somehow get the QUANTITY of item in order; Message to Patrick: IGNORE.
-                double itemPrice = item.getPrice() * quantity;  // Assuming getItemPrice() returns price per item
-                report.append("  - ").append(itemName).append(": ").append(quantity).append(" ($").append(new DecimalFormat("#0.00").format(itemPrice)).append(")\n");
+
+            // Iterate through the HashMap<String, Integer> to display each item and its quantity
+            for (Map.Entry<String, Integer> entry : order.getItems().entrySet()) {
+                String itemName = entry.getKey();
+                int quantity = entry.getValue();
+
+                // Assuming you have a way to retrieve the MenuItem object by name
+                MenuItem item = findMenuItemByName(itemName);  // Implement this method to fetch the MenuItem by name
+
+                if (item != null) {
+                    double itemPrice = item.getPrice() * quantity;
+                    report.append("  - ").append(itemName).append(": ").append(quantity).append(" ($").append(new DecimalFormat("#0.00").format(itemPrice)).append(")\n");
+                }
             }
             report.append("Total: $").append(new DecimalFormat("#0.00").format(order.getTotalPrice())).append("\n\n");
         }
@@ -82,12 +92,13 @@ public class SalesReportService {
 
         // Iterate through each order
         for (Order order : orders) {
-            // Iterate through each MenuItem in the order
-            for (MenuItem item : order.getItems()) {
-                String itemName = item.getName();
+            // Iterate through each entry in the HashMap<String, Integer>
+            for (Map.Entry<String, Integer> entry : order.getItems().entrySet()) {
+                String itemName = entry.getKey();
+                int quantity = entry.getValue();
 
                 // Update the item count in the map
-                itemCountMap.put(itemName, itemCountMap.getOrDefault(itemName, 0) + 1);
+                itemCountMap.put(itemName, itemCountMap.getOrDefault(itemName, 0) + quantity);
             }
         }
 
@@ -99,15 +110,13 @@ public class SalesReportService {
         return sortedItems.subList(0, Math.min(3, sortedItems.size()));
     }
 
-    public int getItemCount(Order order){
-        // Map to store item name and its total count
-        Map<String, Integer> itemCountMap = new HashMap<>();
-        for (MenuItem item : order.getItems()) {
-            String itemName = item.getName();
-
-            // Update the item count in the map
-            itemCountMap.put(itemName, itemCountMap.getOrDefault(itemName, 0) + 1);
+    public MenuItem findMenuItemByName(String itemName) {
+        for (MenuItem item : menuItems) {
+            if (item.getName().equalsIgnoreCase(itemName)) {
+                return item;
+            }
         }
+        return null;  // Return null if the item is not found
     }
 
     public void exportReportToFile(String report, String filePath) {
@@ -115,7 +124,6 @@ public class SalesReportService {
     }
 
     public static void main(String[] args) {
-        SalesReportService salesReportService = new SalesReportService(new ArrayList<Order>());
-        salesReportService.generateDailySalesReport(new TableService());
+
     }
 }

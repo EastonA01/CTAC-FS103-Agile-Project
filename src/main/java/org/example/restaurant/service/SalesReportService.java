@@ -8,6 +8,8 @@ import org.example.restaurant.model.MenuItem;
 import org.example.restaurant.model.Order;
 import org.example.restaurant.model.Table;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -120,7 +122,13 @@ public class SalesReportService {
     }
 
     public void exportReportToFile(String report, String filePath) {
-        // TODO: Export the report to a text file
+        // Export the report to a text file
+        // Create a FileWriter in try-with-resources to ensure the file is closed properly
+        try (FileWriter fileWriter = new FileWriter(filePath)) {
+            fileWriter.write(report);  // Write the report string to the file
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void main(String[] args) {

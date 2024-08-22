@@ -26,6 +26,7 @@ public class MainFrame extends JFrame {
     private OrderProcessingPanel orderProcessingPanel;
     private TableManagementPanel tableManagementPanel;
     private SalesReportPanel salesReportPanel;
+    private MenuManagementPanel menuManagementPanel;
     private JMenu backMenu;
 
     private InventoryService inventoryService;
@@ -55,6 +56,9 @@ public class MainFrame extends JFrame {
 
         // Set up Sales Report
         setupSalesReport();
+
+        // Set pu Menu Management
+        setupMenuManagement();
     }
 
     // Initialize components
@@ -159,6 +163,14 @@ public class MainFrame extends JFrame {
         addPanel(salesReportPanel, "Sales");
     }
 
+    // Set up Menu Management
+    private void setupMenuManagement(){
+        MenuService menuService = new MenuService();
+        menuManagementPanel = new MenuManagementPanel(menuService);
+
+        addPanel(menuManagementPanel, "Menu");
+    }
+
     // Set up menus and their action listeners
     private void setupMenu() {
         menuBar = new JMenuBar();
@@ -168,6 +180,7 @@ public class MainFrame extends JFrame {
         JMenuItem orderMenuItem = new JMenuItem("Ring in Orders");
         JMenuItem reportsMenuItem = new JMenuItem("View Sales Reports");
         JMenuItem manageTableMenuItem = new JMenuItem("Manage Table");
+        JMenuItem manageMenuItems = new JMenuItem("Manage Menu");
         JMenuItem exitMenuItem = new JMenuItem("Exit");
 
         inventoryMenuItem.addActionListener(new ActionListener() {
@@ -201,6 +214,16 @@ public class MainFrame extends JFrame {
             }
         });
 
+        manageMenuItems.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showPanel("Menu");
+                // Revalidate and repaint to ensure the UI is updated properly
+                contentPanel.revalidate();
+                contentPanel.repaint();
+            }
+        });
+
         exitMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -212,6 +235,7 @@ public class MainFrame extends JFrame {
         menu.add(orderMenuItem);
         menu.add(reportsMenuItem);
         menu.add(manageTableMenuItem);
+        menu.add(manageMenuItems);
         menu.addSeparator();
         menu.add(exitMenuItem);
 

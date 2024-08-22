@@ -1,15 +1,15 @@
 package org.example.restaurant.gui;
 
-/*
-Interface to manage menu items.
- */
+import org.example.restaurant.model.MenuItem;
+import org.example.restaurant.service.MenuService;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 public class MenuManagementPanel extends JPanel {
-    // Components like tables, text fields, buttons
-    private JTable menuTable;
     private JTextField itemNameField;
     private JTextArea itemDescriptionArea;
     private JTextField itemPriceField;
@@ -20,8 +20,12 @@ public class MenuManagementPanel extends JPanel {
     private JButton viewButton;
     private JTextArea menuDisplayArea;
 
-    public MenuManagementPanel() {
-        // TODO: Initialize components
+    private MenuService menuService;
+
+    public MenuManagementPanel(MenuService menuService) {
+        this.menuService = menuService;
+
+        // Initialize components
         itemNameField = new JTextField(20);
         itemDescriptionArea = new JTextArea(3, 20);
         itemPriceField = new JTextField(10);
@@ -33,7 +37,7 @@ public class MenuManagementPanel extends JPanel {
         menuDisplayArea = new JTextArea(10, 30);
         menuDisplayArea.setEditable(false);
 
-        // TODO: Add components to panel
+        // Add components to panel
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -84,11 +88,78 @@ public class MenuManagementPanel extends JPanel {
         gbc.gridy = 8;
         add(new JScrollPane(menuDisplayArea), gbc);
 
-        // TODO: Set up action listeners for buttons
-        // Note: The action listeners will be set up in the MenuController, so nothing is needed here
+        // Set up action listeners for buttons
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = itemNameField.getText();
+                String description = itemDescriptionArea.getText();
+                double price;
+                try {
+                    price = Double.parseDouble(itemPriceField.getText());
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(MenuManagementPanel.this, "Invalid price.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                String[] ingredientsArray = itemIngredientsField.getText().split(";");
+                MenuItem newItem = new MenuItem(name, description, price, Arrays.asList(ingredientsArray));
+                menuService.addMenuItem(newItem);
+                JOptionPane.showMessageDialog(MenuManagementPanel.this, "Menu item added successfully.");
+                clearFields();
+            }
+        });
+
+        removeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = itemNameField.getText();
+                menuService.removeMenuItem(name);
+                JOptionPane.showMessageDialog(MenuManagementPanel.this, "Menu item removed successfully.");
+                clearFields();
+            }
+        });
+
+        editButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = itemNameField.getText();
+                String description = itemDescriptionArea.getText();
+                double price;
+                try {
+                    price = Double.parseDouble(itemPriceField.getText());
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(MenuManagementPanel.this, "Invalid price.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                String[] ingredientsArray = itemIngredientsField.getText().split(";");
+                MenuItem updatedItem = new MenuItem(name, description, price, Arrays.asList(ingredientsArray));
+                menuService.editMenuItem(updatedItem);
+                JOptionPane.showMessageDialog(MenuManagementPanel.this, "Menu item edited successfully.");
+                clearFields();
+            }
+        });
+
+        viewButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                menuDisplayArea.setText("");
+                for (MenuItem item : menuService.getAllMenuItems()) {
+                    menuDisplayArea.append("Name: " + item.getName() + "\n");
+                    menuDisplayArea.append("Description: " + item.getDescription() + "\n");
+                    menuDisplayArea.append("Price: $" + item.getPrice() + "\n");
+                    menuDisplayArea.append("Ingredients: " + String.join(", ", item.getIngredients()) + "\n\n");
+                }
+            }
+        });
     }
 
-    // TODO: Implement methods to interact with the service layer
+    private void clearFields() {
+        itemNameField.setText("");
+        itemDescriptionArea.setText("");
+        itemPriceField.setText("");
+        itemIngredientsField.setText("");
+    }
+
     public JButton getAddButton() {
         return addButton;
     }

@@ -1,14 +1,17 @@
 package org.example.restaurant.controller;
 
+import org.example.restaurant.model.MenuItem;
 import org.example.restaurant.service.OrderService;
 import org.example.restaurant.service.TableService;
 import org.example.restaurant.gui.OrderProcessingPanel;
 import org.example.restaurant.model.Order;
 import org.example.restaurant.model.Table;
+import org.example.restaurant.util.FileUtil;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.List;
 
 public class OrderController {
@@ -80,7 +83,66 @@ public class OrderController {
         }
     }
 
+//    private void createOrder() {
+//        String orderIdStr = JOptionPane.showInputDialog(orderProcessingPanel, "Enter Order ID:");
+//
+//        if (orderIdStr != null && !orderIdStr.trim().isEmpty()) {
+//            int orderId = Integer.parseInt(orderIdStr);
+//
+//            // Get the selected table ID from the dropdown
+//            int tableId = (Integer) orderProcessingPanel.getTableDropdown().getSelectedItem();
+//
+//            // Show the food selection dialog
+//            String[] foodChoices = {"Pizza", "Burger", "Pasta", "Fries"};
+//            String food = (String) JOptionPane.showInputDialog(
+//                    orderProcessingPanel,
+//                    "Select Food Item:",
+//                    "Food Selection",
+//                    JOptionPane.QUESTION_MESSAGE,
+//                    null,
+//                    foodChoices,
+//                    foodChoices[0]
+//            );
+//
+//            // Assuming price for each food item (you can adjust these values)
+//            double price;
+//            switch (food) {
+//                case "Pizza":
+//                    price = 10.0;
+//                    break;
+//                case "Burger":
+//                    price = 7.5;
+//                    break;
+//                case "Pasta":
+//                    price = 8.0;
+//                    break;
+//                case "Fries":
+//                    price = 2.5;
+//                    break;
+//            }
+//
+//            Order order = new Order(orderId, tableId);
+//            order.addItem(food, 1, price);
+//            orderService.addOrder(order);
+//            loadOrderTable();
+//            JOptionPane.showMessageDialog(orderProcessingPanel, "Order created successfully.");
+//        } else {
+//            JOptionPane.showMessageDialog(orderProcessingPanel, "Order ID cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+//        }
+//    }
+
     private void createOrder() {
+        // Read menu items from the CSV file
+        List<MenuItem> menuItems;
+        try {
+            FileUtil fileUtil = new FileUtil();
+            menuItems = fileUtil.readMenuItemsFromCSV("src/main/resources/org/example/restaurant/menuItems.csv");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(orderProcessingPanel, "Error reading menu items. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Get the order ID from the user
         String orderIdStr = JOptionPane.showInputDialog(orderProcessingPanel, "Enter Order ID:");
 
         if (orderIdStr != null && !orderIdStr.trim().isEmpty()) {
@@ -89,9 +151,13 @@ public class OrderController {
             // Get the selected table ID from the dropdown
             int tableId = (Integer) orderProcessingPanel.getTableDropdown().getSelectedItem();
 
+            // Convert menu items to an array of food choices for the dialog
+            String[] foodChoices = menuItems.stream()
+                    .map(MenuItem::getName)
+                    .toArray(String[]::new);
+
             // Show the food selection dialog
-            String[] foodChoices = {"Pizza", "Burger", "Pasta", "Fries"};
-            String food = (String) JOptionPane.showInputDialog(
+            String selectedFood = (String) JOptionPane.showInputDialog(
                     orderProcessingPanel,
                     "Select Food Item:",
                     "Food Selection",
@@ -101,28 +167,44 @@ public class OrderController {
                     foodChoices[0]
             );
 
-            // Assuming price for each food item (you can adjust these values)
-            double price = 0.0;
-            switch (food) {
-                case "Pizza":
-                    price = 10.0;
-                    break;
-                case "Burger":
-                    price = 7.5;
-                    break;
-                case "Pasta":
-                    price = 8.0;
-                    break;
-                case "Fries":
-                    price = 2.5;
-                    break;
-            }
+            if (selectedFood != null && !selectedFood.trim().isEmpty()) {
+                // Ask for the quantity of the selected food item
+                String quantityStr = JOptionPane.showInputDialog(orderProcessingPanel, "Enter Quantity:");
+                int quantity = 1; // Default quantity
+                try {
+                    if (quantityStr != null && !quantityStr.trim().isEmpty()) {
+                        quantity = Integer.parseInt(quantityStr);
+                    }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(orderProcessingPanel, "Invalid quantity. Defaulting to 1.", "Warning", JOptionPane.WARNING_MESSAGE);
+                }
 
-            Order order = new Order(orderId, tableId);
-            order.addItem(food, 1, price);
-            orderService.addOrder(order);
-            loadOrderTable();
-            JOptionPane.showMessageDialog(orderProcessingPanel, "Order created successfully.");
+                // Find the selected MenuItem object based on the selected food name
+                MenuItem selectedMenuItem = menuItems.stream()
+                        .filter(item -> item.getName().equals(selectedFood))
+                        .findFirst()
+                        .orElse(null);
+
+                if (selectedMenuItem != null) {
+                    // Create a new order with the selected table ID and order ID
+                    Order order = new Order(orderId, tableId);
+
+                    // Add the selected item to the order with the specified quantity and price
+                    order.addItem(selectedMenuItem.getName(), quantity, selectedMenuItem.getPrice());
+
+                    // Save the order using orderService
+                    orderService.addOrder(order);
+
+                    // Reload the order table to reflect the new order
+                    loadOrderTable();
+
+                    JOptionPane.showMessageDialog(orderProcessingPanel, "Order created successfully.");
+                } else {
+                    JOptionPane.showMessageDialog(orderProcessingPanel, "Selected food item not found.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(orderProcessingPanel, "No food item selected.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         } else {
             JOptionPane.showMessageDialog(orderProcessingPanel, "Order ID cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
         }

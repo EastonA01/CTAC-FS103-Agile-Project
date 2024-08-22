@@ -11,41 +11,58 @@ public class MenuService {
     private static final String MENU_CSV_FILE = "src/main/resources/org/example/restaurant/menuItems.csv";
 
     public MenuService() {
-        // Initialize menu items list (maybe load from file)
         menuItems = new ArrayList<>();
         loadMenuItemsFromCSV(); // Load existing menu items from a CSV file
     }
 
     public void addMenuItem(MenuItem item) {
-        // Add a new menu item
+        if (findMenuItemByName(item.getName()) != null) {
+            throw new IllegalArgumentException("Menu item with this name already exists.");
+        }
         menuItems.add(item);
         saveMenuItemsToCSV(); // Save the updated menu to a CSV file
     }
 
     public void removeMenuItem(String itemName) {
-        // Remove a menu item by name
-        menuItems.removeIf(item -> item.getName().equalsIgnoreCase(itemName));
-        saveMenuItemsToCSV(); // Save the updated menu to a CSV file
+        MenuItem item = findMenuItemByName(itemName);
+        if (item != null) {
+            menuItems.remove(item);
+            saveMenuItemsToCSV(); // Save the updated menu to a CSV file
+        } else {
+            throw new IllegalArgumentException("Menu item not found.");
+        }
     }
 
     public void editMenuItem(MenuItem updatedItem) {
-        // Edit an existing menu item
         for (int i = 0; i < menuItems.size(); i++) {
             MenuItem item = menuItems.get(i);
             if (item.getName().equalsIgnoreCase(updatedItem.getName())) {
                 menuItems.set(i, updatedItem);
-                break;
+                saveMenuItemsToCSV(); // Save the updated menu to a CSV file
+                return;
             }
         }
-        saveMenuItemsToCSV(); // Save the updated menu to a CSV file
+        throw new IllegalArgumentException("Menu item not found.");
     }
 
     public List<MenuItem> getAllMenuItems() {
-        // Return all menu items
         return new ArrayList<>(menuItems); // Return a copy of the list
     }
 
-    // Implement methods to load and save menu items to file
+    public MenuItem findMenuItemByName(String itemName) {
+        for (MenuItem item : menuItems) {
+            if (item.getName().equalsIgnoreCase(itemName)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public void refreshMenuItems() {
+        menuItems.clear();
+        loadMenuItemsFromCSV();
+    }
+
     private void saveMenuItemsToCSV() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(MENU_CSV_FILE))) {
             for (MenuItem item : menuItems) {
@@ -54,7 +71,7 @@ public class MenuService {
                 bw.newLine();
             }
         } catch (IOException e) {
-            e.printStackTrace(); // Replace with logging if preferred
+            e.printStackTrace();
         }
     }
 
@@ -70,8 +87,7 @@ public class MenuService {
                 menuItems.add(new MenuItem(name, description, price, ingredients));
             }
         } catch (IOException e) {
-            e.printStackTrace(); // Replace with logging if preferred
+            e.printStackTrace();
         }
     }
 }
-

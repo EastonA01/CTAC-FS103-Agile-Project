@@ -9,7 +9,7 @@ public class Table {
     private int occupants;
     private String status;
     private double totalPrice;
-    private List<Order> orders;  // New list to store orders associated with the table
+    private List<Order> orders;  // List to store orders associated with the table
 
     public Table(int tableId, String tableName, int occupants, String status) {
         this.tableId = tableId;
@@ -67,6 +67,12 @@ public class Table {
 
     public void addOrder(Order order) {
         orders.add(order);
+        updateTotalPrice();
+    }
+
+    // New method to remove an order and update the total price
+    public void removeOrder(Order order) {
+        orders.remove(order);
         updateTotalPrice();
     }
 

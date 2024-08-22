@@ -13,7 +13,6 @@ public class TableManagementPanel extends JPanel {
     private JTable table;
 
     public TableManagementPanel() {
-        // Set up the layout and components
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
@@ -23,7 +22,7 @@ public class TableManagementPanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(new JLabel("Table ID:"), gbc);
-        tableIdField = new JTextField(15);  // Smaller size
+        tableIdField = new JTextField(15);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         add(tableIdField, gbc);
@@ -32,7 +31,7 @@ public class TableManagementPanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 1;
         add(new JLabel("Table Name:"), gbc);
-        tableNameField = new JTextField(15);  // Smaller size
+        tableNameField = new JTextField(15);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         add(tableNameField, gbc);
@@ -41,7 +40,7 @@ public class TableManagementPanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 2;
         add(new JLabel("Number of Occupants:"), gbc);
-        occupantsField = new JTextField(15);  // Smaller size
+        occupantsField = new JTextField(15);
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         add(occupantsField, gbc);
@@ -71,8 +70,6 @@ public class TableManagementPanel extends JPanel {
 
         // Add Table Display (JTable)
         table = new JTable();
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);  // Allow single row selection
-        table.setColumnSelectionAllowed(false);  // Disable column selection
         gbc.gridx = 0;
         gbc.gridy = 6;
         gbc.gridwidth = 2;

@@ -1,6 +1,7 @@
 package org.example.restaurant.gui;
 
 import org.example.restaurant.model.MenuItem;
+import org.example.restaurant.service.InventoryService;
 import org.example.restaurant.service.MenuService;
 
 import javax.swing.*;
@@ -24,6 +25,7 @@ public class MenuManagementPanel extends JPanel {
 
     public MenuManagementPanel(MenuService menuService) {
         this.menuService = menuService;
+        InventoryService inv = new InventoryService();
 
         // Initialize components
         itemNameField = new JTextField(20);
@@ -104,6 +106,7 @@ public class MenuManagementPanel extends JPanel {
                 String[] ingredientsArray = itemIngredientsField.getText().split(";");
                 MenuItem newItem = new MenuItem(name, description, price, Arrays.asList(ingredientsArray));
                 menuService.addMenuItem(newItem);
+                inv.addIngredientsToInventory(Arrays.asList(ingredientsArray));
                 JOptionPane.showMessageDialog(MenuManagementPanel.this, "Menu item added successfully.");
                 clearFields();
             }
@@ -134,6 +137,7 @@ public class MenuManagementPanel extends JPanel {
                 String[] ingredientsArray = itemIngredientsField.getText().split(";");
                 MenuItem updatedItem = new MenuItem(name, description, price, Arrays.asList(ingredientsArray));
                 menuService.editMenuItem(updatedItem);
+                inv.addIngredientsToInventory(Arrays.asList(ingredientsArray));
                 JOptionPane.showMessageDialog(MenuManagementPanel.this, "Menu item edited successfully.");
                 clearFields();
             }

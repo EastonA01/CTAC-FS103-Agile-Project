@@ -36,6 +36,7 @@ public class MenuController {
         menuManagementPanel.getViewButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                System.out.println("HALLO :D");
                 viewMenuItems();
             }
         });
@@ -52,7 +53,8 @@ public class MenuController {
         try {
             // Add the new menu item to the menu
             menuService.addMenuItem(menuItem);
-
+            // TESTING
+            System.out.println("Ingredients: " + ingredients);
             // Add the ingredients to the inventory
             inventoryService.addIngredientsToInventory(ingredients);
 

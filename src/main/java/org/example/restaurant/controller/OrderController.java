@@ -3,6 +3,7 @@ package org.example.restaurant.controller;
 import org.example.restaurant.model.MenuItem;
 import org.example.restaurant.model.Order;
 import org.example.restaurant.model.Table;
+import org.example.restaurant.service.InventoryService;
 import org.example.restaurant.service.OrderService;
 import org.example.restaurant.service.TableService;
 import org.example.restaurant.gui.OrderProcessingPanel;
@@ -140,6 +141,10 @@ public class OrderController {
                 if (selectedMenuItem != null) {
                     // Create a new order with the selected table ID and order ID
                     Order order = new Order(orderId, tableId, selectedMenuItem.getPrice());
+
+                    // Update our inventory to reflect that order
+                    InventoryService inv = new InventoryService();
+                    inv.reduceIngredientsForMenuItem(selectedMenuItem);
 
                     // Add the selected item to the order with the specified quantity and price
                     order.addItem(selectedMenuItem.getName(), quantity, selectedMenuItem.getPrice());

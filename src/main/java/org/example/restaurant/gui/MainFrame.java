@@ -87,6 +87,7 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(userService.findUserByUsername(userName).getRole().equals("manager")) {
+                    setupInventoryManagement();
                     showPanel("Inventory");
                 }
                 else{

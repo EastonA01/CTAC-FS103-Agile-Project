@@ -15,13 +15,13 @@ public class InventoryManagementPanel extends JPanel {
     private JTextField quantityField;
 
     public InventoryManagementPanel() {
-        // TODO: Initialize components
+        // Initialize components
         inventoryTable = new JTable(); // This will be populated with inventory data later
         restockButton = new JButton("Restock");
         ingredientNameField = new JTextField(20);
         quantityField = new JTextField(10);
 
-        // TODO: Add components to panel
+        // Add components to panel
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);

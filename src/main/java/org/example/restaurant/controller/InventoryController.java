@@ -48,13 +48,14 @@ public class InventoryController {
     public void updateInventoryTable() {
         List<InventoryItem> inventoryItems = inventoryService.getAllItems();
         String[] columnNames = {"Ingredient Name", "Quantity"};
-        Object[][] data = new Object[inventoryItems.size()][2];
-
-        for (int i = 0; i < inventoryItems.size(); i++) {
-            InventoryItem item = inventoryItems.get(i);
-            data[i][0] = item.getIngredientName();
-            data[i][1] = item.getQuantity();
-        }
+        Object[][] data = inventoryService.getInventoryData();
+//        Object[][] data = new Object[inventoryItems.size()][2];
+//
+//        for (int i = 0; i < inventoryItems.size(); i++) {
+//            InventoryItem item = inventoryItems.get(i);
+//            data[i][0] = item.getIngredientName();
+//            data[i][1] = item.getQuantity();
+//        }
 
         inventoryManagementPanel.updateInventoryTable(data, columnNames);
     }

@@ -147,23 +147,33 @@ public class MainFrame extends JFrame {
     }
 
 
-    // Set up table management
     private void setupTableManagement() {
-        tableService = new TableService();  // Ensure tableService is initialized
-        tableManagementPanel = new TableManagementPanel();  // Initialize the panel
-        TableController tableController = new TableController(tableService, tableManagementPanel);  // Attach controller
-
-        addPanel(tableManagementPanel, "ManageTable");  // Add panel to the content panel
+        if (tableManagementPanel == null) {
+            tableService = new TableService();  // Ensure tableService is initialized
+            tableManagementPanel = new TableManagementPanel();  // Initialize the panel
+            TableController tableController = new TableController(tableService, tableManagementPanel);  // Attach controller
+            addPanel(tableManagementPanel, "ManageTable");  // Add panel to the content panel
+        } else {
+            // Instead of reinitializing, just reload the table data in the existing panel
+            tableManagementPanel.updateTableData(tableService.getAllTables().stream()
+                    .map(table -> new Object[] {
+                            table.getTableId(),
+                            table.getTableName(),
+                            table.getOccupants(),
+                            table.getStatus(),
+                            table.getTotalPrice()
+                    }).toArray(Object[][]::new));
+        }
     }
 
     private void showPanel(String panelName) {
         CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
         if (panelName.equals("ManageTable")) {
-            // Reload the table data to ensure it reflects the latest orders
-            setupTableManagement();  // Resetup table management to refresh the data
+            setupTableManagement();  // Setup or refresh the table management
         }
         cardLayout.show(contentPanel, panelName);
     }
+
 
 
     // Set up Sales Report

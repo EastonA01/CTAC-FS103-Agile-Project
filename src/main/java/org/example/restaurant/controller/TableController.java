@@ -54,22 +54,44 @@ public class TableController {
     }
 
 
-    private void saveTable() {
+    public void saveTable() {
         try {
-            int tableId = Integer.parseInt(tableManagementPanel.getTableIdField().getText());
-            String tableName = tableManagementPanel.getTableNameField().getText();
-            int occupants = Integer.parseInt(tableManagementPanel.getOccupantsField().getText());
+            // Validate and parse the Table ID and Number of Occupants
+            String tableIdText = tableManagementPanel.getTableIdField().getText().trim();
+            String occupantsText = tableManagementPanel.getOccupantsField().getText().trim();
+
+            if (tableIdText.isEmpty() || occupantsText.isEmpty()) {
+                JOptionPane.showMessageDialog(tableManagementPanel, "Please fill in all fields.");
+                return;  // Exit the method if any field is empty
+            }
+
+            System.out.println("Save Table button clicked");
+
+            int tableId = Integer.parseInt(tableIdText);
+            int occupants = Integer.parseInt(occupantsText);
+
+            // Retrieve the other fields
+            String tableName = tableManagementPanel.getTableNameField().getText().trim();
             String status = tableManagementPanel.getStatusComboBox().getSelectedItem().toString();
 
+            // Create a new Table object and add it using the service
             Table table = new Table(tableId, tableName, occupants, status);
             tableService.addTable(table);
-            loadTableData();  // Refresh the table display
+
+            // Refresh the table display
+            loadTableData();
+
+            // Show success message once
+            JOptionPane.showMessageDialog(tableManagementPanel, "Table saved successfully.");
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(tableManagementPanel, "Please enter valid numeric values for Table ID and Occupants.");
         }
     }
 
-    private void deleteTable() {
+
+
+
+    public void deleteTable() {
         int selectedRow = tableManagementPanel.getTable().getSelectedRow();
 
         if (selectedRow != -1) {
@@ -77,22 +99,24 @@ public class TableController {
             int tableId = (int) tableManagementPanel.getTable().getValueAt(selectedRow, 0);
             tableService.deleteTable(tableId);
             loadTableData();  // Refresh the table display
+            JOptionPane.showMessageDialog(tableManagementPanel, "Table deleted successfully.");
         } else {
             try {
                 // Delete based on Table ID input
                 int tableId = Integer.parseInt(tableManagementPanel.getTableIdField().getText());
                 tableService.deleteTable(tableId);
+                loadTableData();  // Refresh the table display
+                JOptionPane.showMessageDialog(tableManagementPanel, "Table deleted successfully.");
             } catch (NumberFormatException ex) {
                 // If Table ID is not provided, try deleting based on Table Name
                 String tableName = tableManagementPanel.getTableNameField().getText();
                 if (!tableName.isEmpty()) {
                     tableService.deleteTableByName(tableName);
-                } else {
-                    JOptionPane.showMessageDialog(tableManagementPanel, "Please select a row or enter a Table ID/Name to delete.");
-                    return;
+                    loadTableData();  // Refresh the table display
+                    JOptionPane.showMessageDialog(tableManagementPanel, "Table deleted successfully.");
                 }
             }
-            loadTableData();  // Refresh the table display
         }
     }
+
 }

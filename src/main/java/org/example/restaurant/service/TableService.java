@@ -44,6 +44,7 @@ public class TableService {
         saveTablesToCSV();  // Save updated list
     }
 
+
     public List<Table> getAllTables() {
         return new ArrayList<>(tables);  // Return a copy of the list
     }
@@ -63,7 +64,7 @@ public class TableService {
         }
     }
 
-    private void saveTablesToCSV() {
+    public void saveTablesToCSV() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(TABLE_CSV_FILE))) {
             for (Table table : tables) {
                 bw.write(table.getTableId() + "," + table.getTableName() + "," +
@@ -76,7 +77,7 @@ public class TableService {
         }
     }
 
-    private void loadTablesFromCSV() {
+    public void loadTablesFromCSV() {
         try (BufferedReader br = new BufferedReader(new FileReader(TABLE_CSV_FILE))) {
             String line;
             while ((line = br.readLine()) != null) {

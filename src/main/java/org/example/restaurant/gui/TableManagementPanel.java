@@ -16,8 +16,8 @@ public class TableManagementPanel extends JPanel {
     private JTable table;
 
     // Declare the services and controllers
-    private TableService tableService;
-    private TableController tableController;
+    public TableService tableService;
+    public TableController tableController;
 
     public TableManagementPanel() {
         setLayout(new GridBagLayout());
@@ -123,22 +123,7 @@ public class TableManagementPanel extends JPanel {
         table.setModel(new javax.swing.table.DefaultTableModel(data, columnNames));
     }
 
-    // Setup the table management in the panel
-    private void setupTableManagement() {
-        tableService = new TableService();  // Ensure tableService is initialized
-        tableController = new TableController(tableService, this); // Attach controller
 
-        addPanel(this, "ManageTable"); // Add panel to the content panel
-    }
-
-    private void showPanel(String panelName) {
-        CardLayout cardLayout = (CardLayout) getLayout();
-        if (panelName.equals("ManageTable")) {
-            tableService = new TableService(); // Reload or refresh the table data
-            setupTableManagement(); // Resetup table management to refresh the data
-        }
-        cardLayout.show(this, panelName);
-    }
 
     private void addPanel(JPanel panel, String panelName) {
         add(panel, panelName);

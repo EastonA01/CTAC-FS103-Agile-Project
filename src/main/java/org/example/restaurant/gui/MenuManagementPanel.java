@@ -196,3 +196,4 @@ public class MenuManagementPanel extends JPanel {
         return menuDisplayArea;
     }
 }
+

@@ -1,12 +1,8 @@
 package org.example.restaurant.controller;
 
-/*
-Connects the GUI with the InventoryService.
- */
-
+import org.example.restaurant.model.InventoryItem;
 import org.example.restaurant.service.InventoryService;
 import org.example.restaurant.gui.InventoryManagementPanel;
-import org.example.restaurant.model.InventoryItem;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -21,12 +17,10 @@ public class InventoryController {
         this.inventoryService = inventoryService;
         this.inventoryManagementPanel = inventoryManagementPanel;
 
-        // TODO: Set up action listeners for inventory management panel
         setupActionListeners();
-        loadInventoryTable();
+        updateInventoryTable(); // Initial population of the table
     }
 
-    // TODO: Implement methods to interact with InventoryService
     private void setupActionListeners() {
         inventoryManagementPanel.getRestockButton().addActionListener(new ActionListener() {
             @Override
@@ -37,7 +31,6 @@ public class InventoryController {
     }
 
     private void restockItem() {
-        // Collect data from GUI
         String ingredientName = inventoryManagementPanel.getIngredientNameField().getText();
         int quantity;
         try {
@@ -47,27 +40,23 @@ public class InventoryController {
             return;
         }
 
-        // Update inventory via the service
-        inventoryService.updateInventoryItem(ingredientName, quantity);
-
-        // Update GUI
-        loadInventoryTable();
+        inventoryService.restockItem(ingredientName, quantity);
+        updateInventoryTable();
         JOptionPane.showMessageDialog(inventoryManagementPanel, "Inventory updated successfully!");
     }
 
-    private void loadInventoryTable() {
-        // Retrieve all inventory items from the service
-        List<InventoryItem> inventoryItems = inventoryService.getAllInventoryItems();
-
-        // Prepare data for the table
+    public void updateInventoryTable() {
+        List<InventoryItem> inventoryItems = inventoryService.getAllItems();
         String[] columnNames = {"Ingredient Name", "Quantity"};
         Object[][] data = new Object[inventoryItems.size()][2];
+
         for (int i = 0; i < inventoryItems.size(); i++) {
-            data[i][0] = inventoryItems.get(i).getIngredientName();
-            data[i][1] = inventoryItems.get(i).getQuantity();
+            InventoryItem item = inventoryItems.get(i);
+            data[i][0] = item.getIngredientName();
+            data[i][1] = item.getQuantity();
         }
 
-        // Update the table in the GUI
         inventoryManagementPanel.updateInventoryTable(data, columnNames);
     }
 }
+

@@ -9,6 +9,7 @@ public class OrderProcessingPanel extends JPanel {
     private JButton markAsReadyButton;
     private JButton createOrderButton;
     private JButton assignTableButton;
+    private JButton deleteOrderButton; // New button for deleting orders
     private JComboBox<Integer> tableDropdown;
 
     public OrderProcessingPanel() {
@@ -22,6 +23,7 @@ public class OrderProcessingPanel extends JPanel {
         markAsReadyButton = new JButton("Mark as Ready");
         createOrderButton = new JButton("Create Order");
         assignTableButton = new JButton("Assign to Table");
+        deleteOrderButton = new JButton("Delete Order"); // Initialize the delete button
         tableDropdown = new JComboBox<>();
     }
 
@@ -64,6 +66,11 @@ public class OrderProcessingPanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridwidth = 2;
         add(createOrderButton, gbc);
+
+        gbc.gridy = 5; // Adjusting the position for the new button
+        gbc.gridx = 0;
+        gbc.gridwidth = 2;
+        add(deleteOrderButton, gbc); // Add the delete button to the panel
     }
 
     public JButton getMarkAsPreparingButton() {
@@ -82,6 +89,10 @@ public class OrderProcessingPanel extends JPanel {
         return assignTableButton;
     }
 
+    public JButton getDeleteOrderButton() {
+        return deleteOrderButton; // Provide access to the delete button
+    }
+
     public JTable getOrderTable() {
         return orderTable;
     }
@@ -98,7 +109,3 @@ public class OrderProcessingPanel extends JPanel {
         tableDropdown.setModel(new DefaultComboBoxModel<>(tableIds));
     }
 }
-
-
-
-

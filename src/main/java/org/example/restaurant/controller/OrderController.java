@@ -58,6 +58,13 @@ public class OrderController {
                 assignTableToOrder();
             }
         });
+
+        orderProcessingPanel.getDeleteOrderButton().addActionListener(new ActionListener() { // Add listener for delete button
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteOrder();
+            }
+        });
     }
 
     private void markOrderAsPreparing() {
@@ -193,6 +200,18 @@ public class OrderController {
             }
         } else {
             JOptionPane.showMessageDialog(orderProcessingPanel, "Please select an order to assign to a table.");
+        }
+    }
+
+    private void deleteOrder() { // New method to delete an order
+        int selectedRow = orderProcessingPanel.getOrderTable().getSelectedRow();
+        if (selectedRow >= 0) {
+            int orderId = (Integer) orderProcessingPanel.getOrderTable().getValueAt(selectedRow, 0);
+            orderService.deleteOrder(orderId); // Delete the order using the service
+            loadOrderTable(); // Refresh the table display
+            JOptionPane.showMessageDialog(orderProcessingPanel, "Order deleted successfully.");
+        } else {
+            JOptionPane.showMessageDialog(orderProcessingPanel, "Please select an order to delete.");
         }
     }
 

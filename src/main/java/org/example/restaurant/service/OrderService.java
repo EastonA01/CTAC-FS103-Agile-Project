@@ -32,6 +32,11 @@ public class OrderService {
         }
     }
 
+    public void deleteOrder(int orderId) { // New method to delete an order
+        orders.removeIf(order -> order.getOrderId() == orderId);
+        saveOrdersToCSV(); // Save the updated orders list to a CSV file
+    }
+
     public List<Order> getAllOrders() {
         return new ArrayList<>(orders); // Return a copy of the list
     }
@@ -107,7 +112,3 @@ public class OrderService {
         return items;
     }
 }
-
-
-
-

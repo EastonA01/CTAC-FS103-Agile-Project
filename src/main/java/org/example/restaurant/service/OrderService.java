@@ -41,7 +41,7 @@ public class OrderService {
         return new ArrayList<>(orders); // Return a copy of the list
     }
 
-    private void saveOrdersToCSV() {
+    public void saveOrdersToCSV() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(ORDERS_CSV_FILE))) {
             for (Order order : orders) {
                 bw.write(order.getOrderId() + "," + order.getTableId() + "," + convertItemsToString(order.getItems()) + "," +
@@ -53,7 +53,7 @@ public class OrderService {
         }
     }
 
-    private void loadOrdersFromCSV() {
+    public void loadOrdersFromCSV() {
         try (BufferedReader br = new BufferedReader(new FileReader(ORDERS_CSV_FILE))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -81,7 +81,7 @@ public class OrderService {
         }
     }
 
-    private String convertItemsToString(Map<String, Integer> items) {
+    public String convertItemsToString(Map<String, Integer> items) {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, Integer> entry : items.entrySet()) {
             sb.append(entry.getKey()).append(":").append(entry.getValue()).append(";");
@@ -92,7 +92,7 @@ public class OrderService {
         return sb.toString();
     }
 
-    private Map<String, Integer> parseItemsString(String itemsString) {
+    public Map<String, Integer> parseItemsString(String itemsString) {
         Map<String, Integer> items = new HashMap<>();
         String[] itemPairs = itemsString.split(";");
         for (String pair : itemPairs) {

@@ -2,78 +2,58 @@ package org.example.restaurant.service;
 
 import org.example.restaurant.model.InventoryItem;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryService {
-    private List<InventoryItem> inventoryItems;
-    private static final String INVENTORY_CSV_FILE = "src/main/resources/org/example/restaurant/inventoryItems.csv";
+    private List<InventoryItem> inventory;
 
     public InventoryService() {
-        inventoryItems = new ArrayList<>();
-        loadInventoryItemsFromCSV(); // Load existing inventory items from a CSV file
+        inventory = new ArrayList<>();
     }
 
-    public void updateInventoryItem(String ingredientName, int quantity) {
-        for (InventoryItem item : inventoryItems) {
+    public void restockItem(String ingredientName, int quantity) {
+        for (InventoryItem item : inventory) {
             if (item.getIngredientName().equalsIgnoreCase(ingredientName)) {
-                item.setQuantity(quantity); // Update the quantity
-                saveInventoryItemsToCSV(); // Save the updated inventory to a CSV file
+                item.setQuantity(item.getQuantity() + quantity);
                 return;
             }
         }
-        // If the item does not exist, add it
-        inventoryItems.add(new InventoryItem(ingredientName, quantity));
-        saveInventoryItemsToCSV(); // Save the updated inventory to a CSV file
+        inventory.add(new InventoryItem(ingredientName, quantity));
     }
 
-    public List<InventoryItem> getAllInventoryItems() {
-        return new ArrayList<>(inventoryItems); // Return a copy of the list
-    }
-
-    public boolean isRunningLow(String ingredientName) {
-        for (InventoryItem item : inventoryItems) {
+    public InventoryItem getItemByName(String ingredientName) {
+        for (InventoryItem item : inventory) {
             if (item.getIngredientName().equalsIgnoreCase(ingredientName)) {
-                return item.getQuantity() < 5; // Assuming a threshold of 5 units as "running low"
+                return item;
             }
         }
-        return false;
+        return null;
     }
 
-    private void saveInventoryItemsToCSV() {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(INVENTORY_CSV_FILE))) {
-            for (InventoryItem item : inventoryItems) {
-                bw.write(item.getIngredientName() + "," + item.getQuantity());
-                bw.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace(); // Replace with logging if preferred
+    public List<InventoryItem> getAllItems() {
+        return new ArrayList<>(inventory);
+    }
+
+    public Object[][] getInventoryData() {
+        Object[][] data = new Object[inventory.size()][2];
+        for (int i = 0; i < inventory.size(); i++) {
+            InventoryItem item = inventory.get(i);
+            data[i][0] = item.getIngredientName();
+            data[i][1] = item.getQuantity();
         }
+        return data;
     }
 
-    // Updated method to load inventory items from CSV with defensive checks
-    private void loadInventoryItemsFromCSV() {
-        try (BufferedReader br = new BufferedReader(new FileReader(INVENTORY_CSV_FILE))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                if (values.length < 2) {
-                    System.out.println("Skipping malformed line: " + line);
-                    continue; // Skip this line if it doesn't have the expected number of values
-                }
-                String ingredientName = values[0];
-                int quantity = Integer.parseInt(values[1]);
-                inventoryItems.add(new InventoryItem(ingredientName, quantity));
-            }
-        } catch (IOException e) {
-            e.printStackTrace(); // Replace with logging if preferred
-        } catch (NumberFormatException e) {
-            System.err.println("Error parsing quantity value. Please check the CSV file for non-integer values.");
-            e.printStackTrace();
+    public void addIngredientsToInventory(List<String> ingredients) {
+        for (String ingredient : ingredients) {
+            restockItem(ingredient, 1);  // Increment quantity by 1 for each ingredient added to inventory
         }
     }
 }
+
+
+
 
 
 

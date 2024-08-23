@@ -83,7 +83,12 @@ public class MainFrame extends JFrame {
         inventoryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                showPanel("Inventory");
+                if(userService.findUserByUsername(userName).getRole().equals("manager")) {
+                    showPanel("Inventory");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "User must be a manager!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
@@ -100,7 +105,12 @@ public class MainFrame extends JFrame {
         salesReportsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                showPanel("Sales");
+                if(userService.findUserByUsername(userName).getRole().equals("manager")) {
+                    showPanel("Sales");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "User must be a manager!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
         manageTableButton = new JButton("Manage Table");
@@ -114,10 +124,11 @@ public class MainFrame extends JFrame {
             }
         });
 
-        buttonPanel.add(inventoryButton);
+
         buttonPanel.add(ringInOrdersButton);
-        buttonPanel.add(salesReportsButton);
         buttonPanel.add(manageTableButton);
+        buttonPanel.add(inventoryButton);
+        buttonPanel.add(salesReportsButton);
 
         mainPanel.add(buttonPanel, BorderLayout.CENTER);
 
@@ -147,34 +158,14 @@ public class MainFrame extends JFrame {
     }
 
 
+    // Set up table management
     private void setupTableManagement() {
-        if (tableManagementPanel == null) {
-            tableService = new TableService();  // Ensure tableService is initialized
-            tableManagementPanel = new TableManagementPanel();  // Initialize the panel
-            TableController tableController = new TableController(tableService, tableManagementPanel);  // Attach controller
-            addPanel(tableManagementPanel, "ManageTable");  // Add panel to the content panel
-        } else {
-            // Instead of reinitializing, just reload the table data in the existing panel
-            tableManagementPanel.updateTableData(tableService.getAllTables().stream()
-                    .map(table -> new Object[] {
-                            table.getTableId(),
-                            table.getTableName(),
-                            table.getOccupants(),
-                            table.getStatus(),
-                            table.getTotalPrice()
-                    }).toArray(Object[][]::new));
-        }
+        tableService = new TableService();
+        tableManagementPanel = new TableManagementPanel();
+        TableController tableController = new TableController(tableService, tableManagementPanel);
+
+        addPanel(tableManagementPanel, "ManageTable");
     }
-
-    private void showPanel(String panelName) {
-        CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
-        if (panelName.equals("ManageTable")) {
-            setupTableManagement();  // Setup or refresh the table management
-        }
-        cardLayout.show(contentPanel, panelName);
-    }
-
-
 
     // Set up Sales Report
     private void setupSalesReport(){
@@ -208,7 +199,12 @@ public class MainFrame extends JFrame {
         inventoryMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                showPanel("Inventory");
+                if(userService.findUserByUsername(userName).getRole().equals("manager")) {
+                    showPanel("Inventory");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "User must be a manager!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
@@ -222,7 +218,12 @@ public class MainFrame extends JFrame {
         reportsMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                showPanel("Sales");
+                if(userService.findUserByUsername(userName).getRole().equals("manager")) {
+                    showPanel("Sales");
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, "User must be a manager!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
@@ -295,6 +296,11 @@ public class MainFrame extends JFrame {
         setVisible(true);
     }
 
+    // Implement methods to switch between different panels
+    private void showPanel(String panelName) {
+        CardLayout cardLayout = (CardLayout) contentPanel.getLayout();
+        cardLayout.show(contentPanel, panelName);
+    }
 
     public void addPanel(JPanel panel, String panelName) {
         contentPanel.add(panel, panelName);

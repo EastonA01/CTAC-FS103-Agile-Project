@@ -92,7 +92,7 @@ public class UserService {
 
 
     public boolean login(String username, String password) {
-        // TODO: Implement login logic (hash password, compare with stored hash)
+        // Implement login logic (hash password, compare with stored hash)
         User user = findUserByUsername(username);
         // Find user if in database and attempt login
         if(user != null){

@@ -35,6 +35,8 @@ public class MainFrame extends JFrame {
     private SalesReportService salesReportService;
     private TableService tableService;
     private MenuService menuService =  new MenuService();
+    private UserService userService =  new UserService();
+    private String userName;
 
     public MainFrame(String username) {
         // Initialize components
@@ -64,6 +66,7 @@ public class MainFrame extends JFrame {
 
     // Initialize components
     private void initializeComponents(String username) {
+        userName = username;
         mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
 

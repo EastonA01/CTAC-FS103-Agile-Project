@@ -22,12 +22,21 @@ public class TableController {
     }
 
     private void setupActionListeners() {
+        // Remove existing listeners to avoid adding multiple listeners
+        for (ActionListener al : tableManagementPanel.getSaveTableButton().getActionListeners()) {
+            tableManagementPanel.getSaveTableButton().removeActionListener(al);
+        }
+
         tableManagementPanel.getSaveTableButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 saveTable();
             }
         });
+
+        for (ActionListener al : tableManagementPanel.getDeleteTableButton().getActionListeners()) {
+            tableManagementPanel.getDeleteTableButton().removeActionListener(al);
+        }
 
         tableManagementPanel.getDeleteTableButton().addActionListener(new ActionListener() {
             @Override
